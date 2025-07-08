@@ -67,125 +67,70 @@ function setActiveNavItem() {
 
 // Initialize header functionality
 function initializeHeader() {
-    // Modal functionality
-    const loginBtn = document.getElementById('loginBtn');
-    const signupBtn = document.getElementById('signupBtn');
-    const loginModal = document.getElementById('loginModal');
-    const signupModal = document.getElementById('signupModal');
-    const closeLogin = document.getElementById('closeLogin');
-    const closeSignup = document.getElementById('closeSignup');
-    const showSignup = document.getElementById('showSignup');
-    const showLogin = document.getElementById('showLogin');
-    const loginForm = document.getElementById('loginForm');
-    const signupForm = document.getElementById('signupForm');
+    const userIcon = document.querySelector('.user-icon');
+    const userMenu = document.querySelector('.user-menu');
+    const menuIcon = document.querySelector('.menu-icon');
+    const navLinks = document.querySelector('.nav-links');
 
-    // Open modals
-    loginBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
+    // Check if user is logged in
+    const userId = sessionStorage.getItem('userId');
+    const userName = sessionStorage.getItem('userName');
 
-    signupBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        signupModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-    });
+    // Update user menu based on authentication status
+    const authLinks = document.querySelectorAll('.auth-link');
+    const userLinks = document.querySelectorAll('.user-link');
+    const userNameDisplay = document.querySelector('.user-name');
 
-    // Close modals
-    closeLogin.addEventListener('click', () => {
-        loginModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    });
-
-    closeSignup.addEventListener('click', () => {
-        signupModal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    });
-
-    // Switch between modals
-    showSignup.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginModal.style.display = 'none';
-        signupModal.style.display = 'flex';
-    });
-
-    showLogin.addEventListener('click', (e) => {
-        e.preventDefault();
-        signupModal.style.display = 'none';
-        loginModal.style.display = 'flex';
-    });
-
-    // Close modals when clicking outside
-    window.addEventListener('click', (e) => {
-        if (e.target === loginModal) {
-            loginModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
+    if (userId && userName) {
+        // User is logged in
+        authLinks.forEach(link => link.style.display = 'none');
+        userLinks.forEach(link => link.style.display = 'block');
+        if (userNameDisplay) {
+            userNameDisplay.textContent = userName;
         }
-        if (e.target === signupModal) {
-            signupModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-    });
+    } else {
+        // User is not logged in
+        authLinks.forEach(link => link.style.display = 'block');
+        userLinks.forEach(link => link.style.display = 'none');
+    }
 
-    // Handle form submissions
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
+    // Mobile menu toggle
+    if (menuIcon && navLinks) {
+        menuIcon.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+    }
 
-        try {
-            // Here you would typically make an API call to your backend
-            // For now, we'll simulate a successful login
-            console.log('Login attempt:', { email });
+    // User menu toggle
+    if (userIcon && userMenu) {
+        userIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenu.classList.toggle('active');
+        });
 
-            // Show success message
-            showMessage('Login successful!', 'success');
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenu.contains(e.target) && !userIcon.contains(e.target)) {
+                userMenu.classList.remove('active');
+            }
+        });
+    }
 
-            // Close modal and update UI
-            setTimeout(() => {
-                loginModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                updateAuthUI(email);
-            }, 1500);
-
-        } catch (error) {
-            showMessage('Login failed. Please try again.', 'error');
-        }
-    });
-
-    signupForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const name = document.getElementById('signupName').value;
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        const confirmPassword = document.getElementById('signupConfirm').value;
-
-        if (password !== confirmPassword) {
-            showMessage('Passwords do not match!', 'error');
-            return;
-        }
-
-        try {
-            // Here you would typically make an API call to your backend
-            // For now, we'll simulate a successful signup
-            console.log('Signup attempt:', { name, email });
-
-            // Show success message
-            showMessage('Account created successfully!', 'success');
-
-            // Close modal and update UI
-            setTimeout(() => {
-                signupModal.style.display = 'none';
-                document.body.style.overflow = 'auto';
-                updateAuthUI(email);
-            }, 1500);
-
-        } catch (error) {
-            showMessage('Signup failed. Please try again.', 'error');
-        }
-    });
+    // Handle logout
+    const logoutButton = document.querySelector('.logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Clear session storage
+            sessionStorage.clear();
+            // Redirect to home page
+            window.location.href = '/';
+        });
+    }
 }
+
+// Export the initialization function
+window.initializeHeader = initializeHeader;
 
 // Helper function to show messages
 function showMessage(message, type) {
@@ -389,4 +334,90 @@ style.textContent = `
     }
 `;
 
-document.head.appendChild(style); 
+document.head.appendChild(style);
+
+document.addEventListener('DOMContentLoaded', () => {
+    const userLinks = document.querySelectorAll('.user-link');
+    const authLinks = document.querySelectorAll('.auth-link');
+    const userNameSpan = document.querySelector('.user-name');
+    const menuIcon = document.querySelector('.menu-icon');
+    const navLinks = document.querySelector('.nav-links');
+    const cartIcon = document.querySelector('.cart-icon');
+    const cartCount = document.querySelector('.cart-count');
+
+    // Toggle mobile menu
+    menuIcon.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+    });
+
+    // Check authentication status
+    const userId = sessionStorage.getItem('userId');
+    const userName = sessionStorage.getItem('userName');
+
+    if (userId) {
+        // User is logged in
+        userLinks.forEach(link => link.style.display = 'block');
+        authLinks.forEach(link => link.style.display = 'none');
+        if (userNameSpan) {
+            userNameSpan.textContent = userName || 'User';
+        }
+
+        // Update cart count
+        updateCartCount(userId);
+    } else {
+        // User is logged out
+        userLinks.forEach(link => link.style.display = 'none');
+        authLinks.forEach(link => link.style.display = 'inline-block');
+    }
+
+    // Handle logout
+    const logoutButton = document.querySelector('.logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            sessionStorage.removeItem('userId');
+            sessionStorage.removeItem('userName');
+            window.location.href = 'index.html';
+        });
+    }
+
+    // Toggle user menu
+    const userIcon = document.querySelector('.user-icon');
+    const userMenu = document.querySelector('.user-menu');
+    if (userIcon && userMenu) {
+        userIcon.addEventListener('click', () => {
+            userMenu.classList.toggle('active');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userIcon.contains(e.target) && !userMenu.contains(e.target)) {
+                userMenu.classList.remove('active');
+            }
+        });
+    }
+});
+
+// Function to update cart count
+async function updateCartCount(userId) {
+    try {
+        const response = await fetch('http://localhost:3000/api/cart', {
+            headers: {
+                'user-id': userId
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch cart items');
+        }
+
+        const cartItems = await response.json();
+        const cartCount = document.querySelector('.cart-count');
+        if (cartCount) {
+            cartCount.textContent = cartItems.length;
+            cartCount.style.display = cartItems.length > 0 ? 'block' : 'none';
+        }
+    } catch (error) {
+        console.error('Error updating cart count:', error);
+    }
+} 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const PetListing = require('../models/PetListing');
+const pool = require('../config/db');
 
 // Middleware to check if user is logged in
 const requireAuth = (req, res, next) => {
@@ -51,7 +51,14 @@ router.post('/', requireAuth, async (req, res) => {
             });
         }
 
-        const listing = await PetListing.create(userId, petData);
+        const result = await pool.query(
+            `INSERT INTO pet_listings (user_id, pet_type, pet_gender, breed, age, price, description, photos)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+             RETURNING id, user_id, pet_type, pet_gender, breed, age, price, description, photos, status, created_at, updated_at`,
+            [userId, petData.pet_type, petData.pet_gender, petData.breed, petData.age, petData.price, petData.description, petData.photos]
+        );
+
+        const listing = result.rows[0];
         console.log('Listing created:', listing);
 
         res.status(201).json({
@@ -72,8 +79,35 @@ router.post('/', requireAuth, async (req, res) => {
 // @access  Private
 router.get('/user', requireAuth, async (req, res) => {
     try {
-        const listings = await PetListing.getByUserId(req.userId);
-        res.json(listings);
+        const result = await pool.query(
+            `SELECT 
+                id,
+                user_id,
+                pet_type,
+                pet_gender,
+                breed,
+                age,
+                price,
+                description,
+                photos,
+                status,
+                created_at,
+                updated_at
+            FROM pet_listings
+            WHERE user_id = $1
+            ORDER BY created_at DESC`,
+            [req.userId]
+        );
+
+        // Format the response
+        const formattedListings = result.rows.map(listing => ({
+            ...listing,
+            price: parseFloat(listing.price).toFixed(2), // Ensure consistent price format
+            created_at: new Date(listing.created_at).toISOString(),
+            updated_at: new Date(listing.updated_at).toISOString()
+        }));
+
+        res.json(formattedListings);
     } catch (error) {
         console.error('Error in get user listings route:', error);
         res.status(500).json({ message: 'Server error while fetching listings' });
@@ -85,10 +119,27 @@ router.get('/user', requireAuth, async (req, res) => {
 // @access  Public
 router.get('/', async (req, res) => {
     try {
-        const listings = await PetListing.getAllActive();
-        res.json(listings);
+        const result = await pool.query(
+            `SELECT 
+                id,
+                user_id,
+                pet_type,
+                pet_gender,
+                breed,
+                age,
+                price,
+                description,
+                photos,
+                status,
+                created_at
+            FROM pet_listings
+            WHERE status = 'active'
+            ORDER BY created_at DESC`
+        );
+
+        res.json(result.rows);
     } catch (error) {
-        console.error('Error in get all listings route:', error);
+        console.error('Error fetching listings:', error);
         res.status(500).json({ message: 'Server error while fetching listings' });
     }
 });
@@ -98,7 +149,26 @@ router.get('/', async (req, res) => {
 // @access  Public
 router.get('/:id', async (req, res) => {
     try {
-        const listing = await PetListing.getById(req.params.id);
+        const result = await pool.query(
+            `SELECT 
+                id,
+                user_id,
+                pet_type,
+                pet_gender,
+                breed,
+                age,
+                price,
+                description,
+                photos,
+                status,
+                created_at,
+                updated_at
+            FROM pet_listings
+            WHERE id = $1`,
+            [req.params.id]
+        );
+
+        const listing = result.rows[0];
         if (!listing) {
             return res.status(404).json({ message: 'Listing not found' });
         }
@@ -114,7 +184,24 @@ router.get('/:id', async (req, res) => {
 // @access  Private
 router.put('/:id', requireAuth, async (req, res) => {
     try {
-        const listing = await PetListing.update(req.params.id, req.userId, req.body);
+        const result = await pool.query(
+            `UPDATE pet_listings
+             SET
+                pet_type = $1,
+                pet_gender = $2,
+                breed = $3,
+                age = $4,
+                price = $5,
+                description = $6,
+                photos = $7,
+                status = $8,
+                updated_at = NOW()
+             WHERE id = $9 AND user_id = $10
+             RETURNING id, user_id, pet_type, pet_gender, breed, age, price, description, photos, status, created_at, updated_at`,
+            [req.body.pet_type, req.body.pet_gender, req.body.breed, req.body.age, req.body.price, req.body.description, req.body.photos, req.body.status, req.params.id, req.userId]
+        );
+
+        const listing = result.rows[0];
         if (!listing) {
             return res.status(404).json({ message: 'Listing not found or unauthorized' });
         }
@@ -133,7 +220,12 @@ router.put('/:id', requireAuth, async (req, res) => {
 // @access  Private
 router.delete('/:id', requireAuth, async (req, res) => {
     try {
-        const listing = await PetListing.delete(req.params.id, req.userId);
+        const result = await pool.query(
+            `DELETE FROM pet_listings WHERE id = $1 AND user_id = $2 RETURNING id, user_id, pet_type, pet_gender, breed, age, price, description, photos, status, created_at, updated_at`,
+            [req.params.id, req.userId]
+        );
+
+        const listing = result.rows[0];
         if (!listing) {
             return res.status(404).json({ message: 'Listing not found or unauthorized' });
         }

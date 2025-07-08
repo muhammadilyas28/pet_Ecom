@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 require('dotenv').config();
 
 const app = express();
@@ -12,6 +13,12 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'user-id', 'Authorization']
 }));
+
+// Create uploads directory if it doesn't exist
+const uploadDir = path.join(__dirname, 'public/uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Configure multer for file upload
 const storage = multer.diskStorage({
@@ -25,17 +32,29 @@ const storage = multer.diskStorage({
     }
 });
 
+// Helper function to check file type
+function checkFileType(file, cb) {
+    // Allowed file types
+    const filetypes = /jpeg|jpg|png|gif|webp/;
+    // Check extension
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    // Check mime type
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb(new Error('Only image files (jpeg, jpg, png, gif, webp) are allowed!'));
+    }
+}
+
 const upload = multer({
     storage: storage,
     limits: {
         fileSize: 5 * 1024 * 1024 // 5MB limit
     },
     fileFilter: function (req, file, cb) {
-        // Accept only image files
-        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-            return cb(new Error('Only image files are allowed!'), false);
-        }
-        cb(null, true);
+        checkFileType(file, cb);
     }
 });
 
@@ -44,13 +63,7 @@ app.use(express.json());
 
 // Serve static files from public directory
 app.use('/public', express.static(path.join(__dirname, 'public')));
-
-// Create uploads directory if it doesn't exist
-const fs = require('fs');
-const uploadDir = path.join(__dirname, 'public/uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // Routes
 app.use('/api/auth', require('./backend/routes/auth'));
@@ -64,8 +77,8 @@ app.post('/api/upload', upload.array('photos', 5), (req, res) => {
             return res.status(400).json({ message: 'No files uploaded' });
         }
 
-        // Return array of file paths
-        const filePaths = files.map(file => `/public/uploads/${file.filename}`);
+        // Return array of file paths with the correct URL prefix
+        const filePaths = files.map(file => `/uploads/${file.filename}`);
         res.json({ paths: filePaths });
     } catch (error) {
         console.error('Upload error:', error);
@@ -82,7 +95,7 @@ app.use((err, req, res, next) => {
         return res.status(400).json({ message: err.message });
     }
     console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });
+    res.status(400).json({ message: err.message || 'Something went wrong!' });
 });
 
 const PORT = process.env.PORT || 3000;

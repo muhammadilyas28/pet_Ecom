@@ -261,13 +261,18 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const messageBox = document.getElementById('messageBox');
+            const submitBtn = document.querySelector('.submit-btn');
+
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+            messageBox.style.display = 'none';
 
             try {
                 const response = await fetch('http://localhost:3000/api/auth/login', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*'
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         email,
@@ -286,11 +291,10 @@
                 messageBox.className = 'message success';
                 messageBox.style.display = 'block';
 
-                // Store minimal user info in session storage (more secure than localStorage)
+                // Store user info in session storage
                 sessionStorage.setItem('userId', data.user.id);
                 sessionStorage.setItem('userName', data.user.name);
                 sessionStorage.setItem('userEmail', data.user.email);
-                sessionStorage.setItem('isLoggedIn', 'true');
 
                 // Redirect to dashboard after successful login
                 setTimeout(() => {
@@ -301,6 +305,10 @@
                 messageBox.textContent = error.message || 'Login failed. Please try again.';
                 messageBox.className = 'message error';
                 messageBox.style.display = 'block';
+
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
             }
         });
     </script>

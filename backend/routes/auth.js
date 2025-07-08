@@ -20,34 +20,25 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ message: 'Please provide a valid email address' });
         }
 
-        // Validate password requirements
-        const passwordStr = String(password);
-        if (passwordStr.length < 8 ||
-            !/[A-Z]/.test(passwordStr) ||
-            !/[a-z]/.test(passwordStr) ||
-            !/[0-9]/.test(passwordStr)) {
-            return res.status(400).json({
-                message: 'Password must be at least 8 characters long and contain uppercase, lowercase, and numbers'
-            });
+        // Check if user exists
+        const existingUser = await User.findByEmail(email);
+        if (existingUser) {
+            return res.status(400).json({ message: 'Email already exists' });
         }
 
         // Create user
-        const user = await User.create(name, email, passwordStr);
+        const user = await User.create({ name, email, password });
 
         res.status(201).json({
             message: 'User registered successfully',
             user: {
                 id: user.id,
                 name: user.name,
-                email: user.email,
-                created_at: user.created_at
+                email: user.email
             }
         });
     } catch (error) {
         console.error('Registration error:', error);
-        if (error.message === 'Email already exists') {
-            return res.status(400).json({ message: error.message });
-        }
         res.status(500).json({ message: 'Server error during registration' });
     }
 });
@@ -64,29 +55,31 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Please provide email and password' });
         }
 
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'Please provide a valid email address' });
+        // Find user by email
+        const user = await User.findByEmail(email);
+        if (!user) {
+            return res.status(401).json({ message: 'Invalid email or password' });
         }
 
-        // Attempt login
-        const user = await User.login(email, password);
+        // Validate password
+        const isValidPassword = await User.validatePassword(password, user.password);
+        if (!isValidPassword) {
+            return res.status(401).json({ message: 'Invalid email or password' });
+        }
+
+        // Create response object without password
+        const userResponse = {
+            id: user.id,
+            name: user.name,
+            email: user.email
+        };
 
         res.json({
             message: 'Login successful',
-            user: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-                created_at: user.created_at
-            }
+            user: userResponse
         });
     } catch (error) {
         console.error('Login error:', error);
-        if (error.message === 'Invalid email or password') {
-            return res.status(401).json({ message: error.message });
-        }
         res.status(500).json({ message: 'Server error during login' });
     }
 });

@@ -4,12 +4,6 @@ const USER_NAME_KEY = 'userName';
 const USER_PASSWORD_KEY = 'userPassword';
 
 // Initialize default user if none exists
-if (!localStorage.getItem(USER_EMAIL_KEY)) {
-    // Add the initial user
-    localStorage.setItem(USER_EMAIL_KEY, 'lyasmaliki@gmail.com');
-    localStorage.setItem(USER_NAME_KEY, 'a');
-    localStorage.setItem(USER_PASSWORD_KEY, '123456789Aa');
-}
 
 // Helper function to show messages
 function showMessage(element, message, type) {

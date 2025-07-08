@@ -114,70 +114,49 @@ document.getElementById('signupForm').addEventListener('submit', (e) => {
 });
 
 // Browse page functionality
-document.addEventListener('DOMContentLoaded', function () {
-    // Only run this code on the browse page
-    if (!document.querySelector('.browse-section')) return;
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize menu functionality
+    const menuIcon = document.querySelector('.menu-icon');
+    const navLinks = document.querySelector('.nav-links');
 
-    const featuredContainer = document.getElementById('featured-container');
-    const categoryButtons = document.querySelectorAll('.further');
-    const allSections = document.querySelectorAll('section[id$="-section"]');
-
-    // Function to get random cards from each category
-    function getRandomCards() {
-        const cards = [];
-        const categories = ['dogs', 'birds', 'cats', 'ducks'];
-
-        categories.forEach(category => {
-            const categorySection = document.getElementById(`${category}-section`);
-            const categoryCards = categorySection.querySelectorAll('.card');
-            const randomCard = categoryCards[Math.floor(Math.random() * categoryCards.length)];
-            if (randomCard) {
-                cards.push(randomCard.cloneNode(true));
-            }
-        });
-
-        return cards;
-    }
-
-    // Initialize featured cards
-    function initializeFeaturedCards() {
-        const randomCards = getRandomCards();
-        featuredContainer.innerHTML = '';
-        randomCards.forEach(card => {
-            featuredContainer.appendChild(card);
+    if (menuIcon && navLinks) {
+        menuIcon.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
         });
     }
 
-    // Handle category clicks
-    categoryButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const category = this.dataset.category;
+    // Initialize user menu functionality
+    const userIcon = document.querySelector('.user-icon');
+    const userMenu = document.querySelector('.user-menu');
 
-            // Hide all sections first
-            allSections.forEach(section => {
-                section.style.display = 'none';
-            });
-
-            // Show selected category section
-            const selectedSection = document.getElementById(`${category}-section`);
-            if (selectedSection) {
-                selectedSection.style.display = 'block';
-
-                // Smooth scroll to the section
-                selectedSection.scrollIntoView({ behavior: 'smooth' });
-            }
-
-            // Update active state of category buttons
-            categoryButtons.forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-
-            // Update heading
-            document.getElementById('categ').textContent = `${category.charAt(0).toUpperCase() + category.slice(1)} Collection`;
+    if (userIcon && userMenu) {
+        userIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userMenu.classList.toggle('active');
         });
-    });
 
-    // Initialize the page with featured cards
-    initializeFeaturedCards();
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!userMenu.contains(e.target) && !userIcon.contains(e.target)) {
+                userMenu.classList.remove('active');
+            }
+        });
+    }
+
+    // Check authentication status
+    const userId = sessionStorage.getItem('userId');
+    const authLinks = document.querySelectorAll('.auth-link');
+    const userLinks = document.querySelectorAll('.user-link');
+
+    if (userId) {
+        // User is logged in
+        authLinks.forEach(link => link.style.display = 'none');
+        userLinks.forEach(link => link.style.display = 'block');
+    } else {
+        // User is not logged in
+        authLinks.forEach(link => link.style.display = 'block');
+        userLinks.forEach(link => link.style.display = 'none');
+    }
 });
 
 // Mobile Menu Toggle

@@ -105,11 +105,24 @@ class PetListing {
     static async getAllActive() {
         try {
             const result = await pool.query(
-                `SELECT pl.*, u.name as seller_name 
-                FROM pet_listings pl 
-                JOIN users u ON pl.user_id = u.id 
-                WHERE pl.status = 'active' 
-                ORDER BY pl.created_at DESC`
+                `SELECT 
+                pl.id,
+                pl.user_id,
+                pl.pet_type,
+                pl.pet_gender,
+                pl.breed,
+                pl.age,
+                pl.price,
+                pl.description,
+                pl.photos,
+                pl.status,
+                pl.created_at,
+                u.name as seller_name,
+                u.email as seller_email
+            FROM pet_listings pl 
+            JOIN users u ON pl.user_id = u.id 
+            WHERE pl.status = 'active' 
+            ORDER BY pl.created_at DESC`
             );
             return result.rows;
         } catch (error) {

@@ -1,73 +1,48 @@
 <!-- Header Component -->
 <header>
-    <div class="container header-container">
-        <h1>Pet Connect</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html" id="nav-home">Home</a></li>
-                <li><a href="browse.html" id="nav-browse">Browse Pets</a></li>
-                <li><a href="sell.html" id="nav-sell">Sell a Pet</a></li>
-                <li><a href="about.html" id="nav-about">About Us</a></li>
-                <li><a href="contact.html" id="nav-contact">Contact</a></li>
-                <li><a href="pettales.html" id="nav-tales">Pet tales</a></li>
-                <li><a href="vetadvice.html" id="nav-vet">Vet Advice</a></li>
-            </ul>
-        </nav>
-        <div class="auth-buttons">
-            <a href="#" class="auth-btn login-btn" id="loginBtn">Login</a>
-            <a href="#" class="auth-btn signup-btn" id="signupBtn">Sign Up</a>
+    <nav>
+        <div class="logo">
+            <a href="index.html">
+                <i class="fas fa-paw"></i>
+                <span>Pet Connect</span>
+            </a>
         </div>
-    </div>
+
+        <div class="menu-icon">
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="browse.html">Browse Pets</a></li>
+            <li><a href="sell.html">Sell a Pet</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+
+        <div class="user-section">
+            <!-- Auth links (shown when logged out) -->
+            <a href="login.html" class="auth-link">Login</a>
+            <a href="signup.html" class="auth-link">Sign Up</a>
+
+            <!-- Cart icon (shown when logged in) -->
+            <a href="cart.html" class="cart-icon user-link" style="display: none;">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count">0</span>
+            </a>
+
+            <!-- User menu (shown when logged in) -->
+            <div class="user-menu-container user-link" style="display: none;">
+                <button class="user-icon">
+                    <i class="fas fa-user"></i>
+                    <span class="user-name">User</span>
+                </button>
+                <div class="user-menu">
+                    <a href="dashboard.html">Dashboard</a>
+                    <a href="profile.html">Profile</a>
+                    <a href="#" class="logout-button">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
-
-<!-- Login Modal -->
-<div id="loginModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" id="closeLogin">&times;</span>
-        <h2 class="form-title">Login</h2>
-        <form id="loginForm">
-            <div class="form-group">
-                <label for="loginEmail">Email</label>
-                <input type="email" id="loginEmail" required>
-            </div>
-            <div class="form-group">
-                <label for="loginPassword">Password</label>
-                <input type="password" id="loginPassword" required>
-            </div>
-            <button type="submit" class="submit-btn">Login</button>
-            <div class="form-footer">
-                <p>Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- Signup Modal -->
-<div id="signupModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" id="closeSignup">&times;</span>
-        <h2 class="form-title">Create Account</h2>
-        <form id="signupForm">
-            <div class="form-group">
-                <label for="signupName">Full Name</label>
-                <input type="text" id="signupName" required>
-            </div>
-            <div class="form-group">
-                <label for="signupEmail">Email</label>
-                <input type="email" id="signupEmail" required>
-            </div>
-            <div class="form-group">
-                <label for="signupPassword">Password</label>
-                <input type="password" id="signupPassword" required>
-            </div>
-            <div class="form-group">
-                <label for="signupConfirm">Confirm Password</label>
-                <input type="password" id="signupConfirm" required>
-            </div>
-            <button type="submit" class="submit-btn">Create Account</button>
-            <div class="form-footer">
-                <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
-            </div>
-        </form>
-    </div>
-</div>

@@ -1,64 +1,111 @@
 // Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', function () {
-    const sellPetForm = document.getElementById('sellPetForm');
+document.addEventListener('DOMContentLoaded', () => {
+    // Check if user is logged in
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) {
+        window.location.href = 'login.html';
+        return;
+    }
 
-    if (sellPetForm) {
-        sellPetForm.addEventListener('submit', async function (e) {
-            e.preventDefault();
+    const form = document.getElementById('sellPetForm');
+    const messageBox = document.createElement('div');
+    messageBox.className = 'message';
+    form.insertBefore(messageBox, form.firstChild);
 
-            // Create pet listing object
-            const petListing = {
-                type: document.getElementById('pet-type').value,
-                gender: document.getElementById('pet-gender').value,
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        try {
+            // Show loading message
+            messageBox.textContent = 'Uploading images...';
+            messageBox.className = 'message info';
+            messageBox.style.display = 'block';
+
+            // Get form data
+            const listingData = {
+                pet_type: document.getElementById('pet-type').value.toLowerCase(),
+                pet_gender: document.getElementById('pet-gender').value.toLowerCase(),
                 breed: document.getElementById('pet-breed').value,
                 age: document.getElementById('pet-age').value,
-                price: document.getElementById('pet-price').value,
+                price: parseFloat(document.getElementById('pet-price').value),
                 description: document.getElementById('pet-description').value,
-                listingDate: new Date().toISOString(),
-                id: 'PET_' + Date.now()
+                photos: []
             };
 
-            try {
-                // Handle photo files
-                const photoInput = document.getElementById('pet-photos');
-                const photoFiles = Array.from(photoInput.files);
-
-                // Convert photos to base64
-                const photoPromises = photoFiles.map(file => {
-                    return new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = e => resolve(e.target.result);
-                        reader.onerror = e => reject(e);
-                        reader.readAsDataURL(file);
-                    });
-                });
-
-                // Wait for all photos to be converted
-                const photos = await Promise.all(photoPromises);
-                petListing.photos = photos;
-
-                // Get existing listings from localStorage or initialize empty array
-                const existingListings = JSON.parse(localStorage.getItem('petListings') || '[]');
-
-                // Add new listing
-                existingListings.push(petListing);
-
-                // Save updated listings back to localStorage
-                localStorage.setItem('petListings', JSON.stringify(existingListings));
-
-                // Show success message
-                alert('Your pet has been listed successfully!');
-
-                // Clear form
-                sellPetForm.reset();
-
-                // Redirect to browse page
-                window.location.href = 'browse.html';
-
-            } catch (error) {
-                console.error('Error saving pet listing:', error);
-                alert('There was an error saving your listing. Please try again.');
+            // Validate price
+            if (isNaN(listingData.price) || listingData.price <= 0) {
+                throw new Error('Please enter a valid price');
             }
-        });
-    }
+
+            // Handle file upload
+            const photoInput = document.getElementById('pet-photos');
+            const files = photoInput.files;
+
+            if (!files || files.length === 0) {
+                throw new Error('Please select at least one photo');
+            }
+
+            if (files.length > 5) {
+                throw new Error('Maximum 5 photos allowed');
+            }
+
+            // Create FormData for file upload
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('photos', files[i]);
+            }
+
+            // Upload photos
+            const uploadResponse = await fetch('http://localhost:3000/api/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!uploadResponse.ok) {
+                const error = await uploadResponse.json();
+                throw new Error(error.message || 'Failed to upload images');
+            }
+
+            const uploadResult = await uploadResponse.json();
+            listingData.photos = uploadResult.paths;
+
+            // Show listing creation message
+            messageBox.textContent = 'Creating listing...';
+
+            // Create listing
+            const response = await fetch('http://localhost:3000/api/listings', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'user-id': userId
+                },
+                body: JSON.stringify(listingData)
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.message || 'Failed to create listing');
+            }
+
+            // Show success message
+            messageBox.textContent = 'Pet listing created successfully!';
+            messageBox.className = 'message success';
+            messageBox.style.display = 'block';
+
+            // Reset form
+            form.reset();
+
+            // Redirect to dashboard after delay
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 2000);
+
+        } catch (error) {
+            console.error('Error:', error);
+            // Show error message
+            messageBox.textContent = error.message || 'Failed to create listing';
+            messageBox.className = 'message error';
+            messageBox.style.display = 'block';
+        }
+    });
 }); 

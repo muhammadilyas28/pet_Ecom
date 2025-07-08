@@ -5,11 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Pets - Pet Connect</title>
-     <link rel="stylesheet" href="style.css">
-      <link rel="stylesheet" href="browse.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="browse.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .loading {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        .loading i {
+            margin-right: 10px;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #dc3545;
+            background: #ffebee;
+            border-radius: 8px;
+            margin: 20px;
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -38,11 +71,22 @@
     <!-- Header will be loaded here by header.js -->
     <div id="header-placeholder"></div>
 
+    <!-- Loading indicator -->
+    <div id="loading" class="loading">
+        <i class="fas fa-spinner"></i> Loading pets...
+    </div>
+
+    <!-- Error message -->
+    <div id="error-message" class="error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        Failed to load some listings. Don't worry, you can still browse our available pets!
+    </div>
+
     <section class="browse-section">
         <h1 id="categ">Select Category</h1>
         <div class="category">
             <div class="further" data-category="dogs"><img src="dog.png" alt="Dogs">
-            <h4>Dogs are here</h4>
+                <h4>Dogs are here</h4>
             </div>
             <div class="further" data-category="ducks"><img src="hen.png" alt="Hens">
                 <h4>Hens are Ducks</h4>
@@ -59,260 +103,260 @@
 
     <!-- Pet sections -->
     <section class="section" id="dogs-section">
-    <h1>Dogs Are Here</h1>
-    <div class="card-container">
-        <div class="card dog1">
+        <h1>Dogs Are Here</h1>
+        <div class="card-container">
+            <div class="card dog1">
                 <div class="image-container">
                     <img src="images/d1.png" alt="Bruno">
                 </div>
-            <h3>Bruno</h3>
-            <p>Age: 2 Years</p>
-            <p>Gender: Male</p>
-            <p>A playful and energetic dog, perfect for families.</p>
-            <p class="price">Price: 12,000 PKR</p>
-            <button class="btn" id="view-dog1"><a href="details/d1.html">View Details</a></button>
-        </div>
+                <h3>Bruno</h3>
+                <p>Age: 2 Years</p>
+                <p>Gender: Male</p>
+                <p>A playful and energetic dog, perfect for families.</p>
+                <p class="price">Price: 12,000 PKR</p>
+                <button class="btn" id="view-dog1"><a href="details/d1.html">View Details</a></button>
+            </div>
 
-        <div class="card dog2">
+            <div class="card dog2">
                 <div class="image-container">
                     <img src="images/d2.png" alt="Luna">
                 </div>
-            <h3>Luna</h3>
-            <p>Age: 1.5 Years</p>
-            <p>Gender: Female</p>
-            <p>Calm and friendly, loves to be around children.</p>
-            <p class="price">Price: 15,000 PKR</p>
-            <button class="btn" id="view-dog2"><a href="details/d2.html">View Details</a></button>
-        </div>
+                <h3>Luna</h3>
+                <p>Age: 1.5 Years</p>
+                <p>Gender: Female</p>
+                <p>Calm and friendly, loves to be around children.</p>
+                <p class="price">Price: 15,000 PKR</p>
+                <button class="btn" id="view-dog2"><a href="details/d2.html">View Details</a></button>
+            </div>
 
-        <div class="card dog3">
+            <div class="card dog3">
                 <div class="image-container">
                     <img src="images/d3.png" alt="Max">
                 </div>
-            <h3>Max</h3>
-            <p>Age: 3 Years</p>
-            <p>Gender: Male</p>
-            <p>Highly trained and loyal, ideal for security.</p>
-            <p class="price">Price: 20,000 PKR</p>
-            <button class="btn" id="view-dog3"><a href="details/d3.html">View Details</a></button>
-        </div>
+                <h3>Max</h3>
+                <p>Age: 3 Years</p>
+                <p>Gender: Male</p>
+                <p>Highly trained and loyal, ideal for security.</p>
+                <p class="price">Price: 20,000 PKR</p>
+                <button class="btn" id="view-dog3"><a href="details/d3.html">View Details</a></button>
+            </div>
 
-        <div class="card dog4">
+            <div class="card dog4">
                 <div class="image-container">
                     <img src="images/d4.png" alt="Bella">
                 </div>
-            <h3>Bella</h3>
-            <p>Age: 2.5 Years</p>
-            <p>Gender: Female</p>
-            <p>Sweet and affectionate, loves to cuddle.</p>
-            <p class="price">Price: 10,500 PKR</p>
-            <button class="btn" id="view-dog4"><a href="details/d4.html">View Details</a></button>
-        </div>
+                <h3>Bella</h3>
+                <p>Age: 2.5 Years</p>
+                <p>Gender: Female</p>
+                <p>Sweet and affectionate, loves to cuddle.</p>
+                <p class="price">Price: 10,500 PKR</p>
+                <button class="btn" id="view-dog4"><a href="details/d4.html">View Details</a></button>
+            </div>
 
-        <div class="card dog5">
+            <div class="card dog5">
                 <div class="image-container">
                     <img src="images/d5.png" alt="Rocky">
                 </div>
-            <h3>Rocky</h3>
-            <p>Age: 1 Year</p>
-            <p>Gender: Male</p>
-            <p>Small breed, perfect for apartments and small homes.</p>
-            <p class="price">Price: 8,000 PKR</p>
-            <button class="btn" id="view-dog5"><a href="details/d5.html">View Details</a></button>
-        </div>
+                <h3>Rocky</h3>
+                <p>Age: 1 Year</p>
+                <p>Gender: Male</p>
+                <p>Small breed, perfect for apartments and small homes.</p>
+                <p class="price">Price: 8,000 PKR</p>
+                <button class="btn" id="view-dog5"><a href="details/d5.html">View Details</a></button>
+            </div>
 
-        <div class="card dog6">
+            <div class="card dog6">
                 <div class="image-container">
                     <img src="images/d6.png" alt="Daisy">
                 </div>
-            <h3>Daisy</h3>
-            <p>Age: 4 Months</p>
-            <p>Gender: Female</p>
-            <p>Super cute and in need of a loving home.</p>
-            <p class="price">Price: 9,500 PKR</p>
-            <button class="btn" id="view-dog6"><a href="details/d6.html">View Details</a></button>
-        </div>
+                <h3>Daisy</h3>
+                <p>Age: 4 Months</p>
+                <p>Gender: Female</p>
+                <p>Super cute and in need of a loving home.</p>
+                <p class="price">Price: 9,500 PKR</p>
+                <button class="btn" id="view-dog6"><a href="details/d6.html">View Details</a></button>
+            </div>
 
-        <div class="card dog7">
+            <div class="card dog7">
                 <div class="image-container">
                     <img src="images/d7.png" alt="Simba">
                 </div>
-            <h3>Simba</h3>
-            <p>Age: 2 Years</p>
-            <p>Gender: Male</p>
-            <p>Healthy and active, enjoys long walks and play.</p>
-            <p class="price">Price: 13,000 PKR</p>
-            <button class="btn" id="view-dog7"><a href="details/d7.html">View Details</a></button>
-        </div>
+                <h3>Simba</h3>
+                <p>Age: 2 Years</p>
+                <p>Gender: Male</p>
+                <p>Healthy and active, enjoys long walks and play.</p>
+                <p class="price">Price: 13,000 PKR</p>
+                <button class="btn" id="view-dog7"><a href="details/d7.html">View Details</a></button>
+            </div>
 
-        <div class="card dog8">
+            <div class="card dog8">
                 <div class="image-container">
                     <img src="images/d8.png" alt="Lily">
                 </div>
-            <h3>Lily</h3>
-            <p>Age: 1 Year</p>
-            <p>Gender: Female</p>
-            <p>Very gentle and great around other pets.</p>
-            <p class="price">Price: 11,000 PKR</p>
-            <button class="btn" id="view-dog8"><a href="details/d8.html">View Details</a></button>
+                <h3>Lily</h3>
+                <p>Age: 1 Year</p>
+                <p>Gender: Female</p>
+                <p>Very gentle and great around other pets.</p>
+                <p class="price">Price: 11,000 PKR</p>
+                <button class="btn" id="view-dog8"><a href="details/d8.html">View Details</a></button>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <section class="section" id="birds-section" style="display: none;">
-    <h1>Birds Are Here</h1>
-    <div class="card-container">
-        <div class="card bird1">
+        <h1>Birds Are Here</h1>
+        <div class="card-container">
+            <div class="card bird1">
                 <div class="image-container">
                     <img src="images/b1.png" alt="Macaw">
                 </div>
-            <h3>Macaw</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Male</p>
-            <p>A playful and energetic bird, perfect for families.</p>
-            <p class="price">Price: 2,000 PKR</p>
+                <h3>Macaw</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Male</p>
+                <p>A playful and energetic bird, perfect for families.</p>
+                <p class="price">Price: 2,000 PKR</p>
                 <button class="btn" id="view-bird1"><a href="details/b1.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card bird2">
+            <div class="card bird2">
                 <div class="image-container">
                     <img src="images/b2.png" alt="Kingfisher">
                 </div>
-            <h3>Kingfisher</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Female</p>
-            <p>Calm and friendly, loves to be around children.</p>
-            <p class="price">Price: 5,000 PKR</p>
+                <h3>Kingfisher</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Female</p>
+                <p>Calm and friendly, loves to be around children.</p>
+                <p class="price">Price: 5,000 PKR</p>
                 <button class="btn" id="view-bird2"><a href="details/b2.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card bird3">
+            <div class="card bird3">
                 <div class="image-container">
                     <img src="images/b3.png" alt="Toucan">
                 </div>
-            <h3>Toucan</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Male</p>
-            <p>Highly trained and loyal, ideal for security.</p>
-            <p class="price">Price: 1,000 PKR</p>
+                <h3>Toucan</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Male</p>
+                <p>Highly trained and loyal, ideal for security.</p>
+                <p class="price">Price: 1,000 PKR</p>
                 <button class="btn" id="view-bird3"><a href="details/b3.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card bird4">
+            <div class="card bird4">
                 <div class="image-container">
                     <img src="images/b4.png" alt="Lorikeet">
                 </div>
-            <h3>Lorikeet</h3>
-            <p>Age: 0.5 Years</p>
-            <p>Gender: Female</p>
-            <p>Sweet and affectionate, loves to cuddle.</p>
-            <p class="price">Price: 500 PKR</p>
+                <h3>Lorikeet</h3>
+                <p>Age: 0.5 Years</p>
+                <p>Gender: Female</p>
+                <p>Sweet and affectionate, loves to cuddle.</p>
+                <p class="price">Price: 500 PKR</p>
                 <button class="btn" id="view-bird4"><a href="details/b4.html">View Details</a></button>
-        </div>
             </div>
-</section>
+        </div>
+    </section>
 
     <section class="section" id="cats-section" style="display: none;">
-    <h1>Cats Are Here</h1>
-    <div class="card-container">
-        <div class="card cat1">
+        <h1>Cats Are Here</h1>
+        <div class="card-container">
+            <div class="card cat1">
                 <div class="image-container">
                     <img src="images/c1.png" alt="Persian">
                 </div>
-            <h3>Persian</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Male</p>
-            <p>A playful and energetic cat, perfect for families.</p>
-            <p class="price">Price: 2,000 PKR</p>
+                <h3>Persian</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Male</p>
+                <p>A playful and energetic cat, perfect for families.</p>
+                <p class="price">Price: 2,000 PKR</p>
                 <button class="btn" id="view-cat1"><a href="details/c1.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card cat2">
+            <div class="card cat2">
                 <div class="image-container">
                     <img src="images/c2.png" alt="Siamese">
                 </div>
-            <h3>Siamese</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Female</p>
-            <p>Calm and friendly, loves to be around children.</p>
-            <p class="price">Price: 5,000 PKR</p>
+                <h3>Siamese</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Female</p>
+                <p>Calm and friendly, loves to be around children.</p>
+                <p class="price">Price: 5,000 PKR</p>
                 <button class="btn" id="view-cat2"><a href="details/c2.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card cat3">
+            <div class="card cat3">
                 <div class="image-container">
                     <img src="images/c3.png" alt="Maine Coon">
                 </div>
-            <h3>Maine Coon</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Male</p>
-            <p>Highly trained and loyal, ideal for security.</p>
-            <p class="price">Price: 1,000 PKR</p>
+                <h3>Maine Coon</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Male</p>
+                <p>Highly trained and loyal, ideal for security.</p>
+                <p class="price">Price: 1,000 PKR</p>
                 <button class="btn" id="view-cat3"><a href="details/c3.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card cat4">
+            <div class="card cat4">
                 <div class="image-container">
                     <img src="images/c4.png" alt="Ragdoll">
                 </div>
-            <h3>Ragdoll</h3>
-            <p>Age: 0.5 Years</p>
-            <p>Gender: Female</p>
-            <p>Sweet and affectionate, loves to cuddle.</p>
-            <p class="price">Price: 500 PKR</p>
+                <h3>Ragdoll</h3>
+                <p>Age: 0.5 Years</p>
+                <p>Gender: Female</p>
+                <p>Sweet and affectionate, loves to cuddle.</p>
+                <p class="price">Price: 500 PKR</p>
                 <button class="btn" id="view-cat4"><a href="details/c4.html">View Details</a></button>
-        </div>
             </div>
-</section>
+        </div>
+    </section>
 
     <section class="section" id="ducks-section" style="display: none;">
-    <h1>Ducks Are Here</h1>
-    <div class="card-container">
-        <div class="card duck1">
+        <h1>Ducks Are Here</h1>
+        <div class="card-container">
+            <div class="card duck1">
                 <div class="image-container">
                     <img src="images/h1.png" alt="Mallard">
                 </div>
-            <h3>Mallard</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Male</p>
-            <p>A playful and energetic cat, perfect for families.</p>
-            <p class="price">Price: 2,000 PKR</p>
+                <h3>Mallard</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Male</p>
+                <p>A playful and energetic cat, perfect for families.</p>
+                <p class="price">Price: 2,000 PKR</p>
                 <button class="btn" id="view-duck1"><a href="details/h1.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card duck2">
+            <div class="card duck2">
                 <div class="image-container">
                     <img src="images/h2.png" alt="Pekin">
                 </div>
-            <h3>Pekin</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Female</p>
-            <p>Calm and friendly, loves to be around children.</p>
-            <p class="price">Price: 5,000 PKR</p>
+                <h3>Pekin</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Female</p>
+                <p>Calm and friendly, loves to be around children.</p>
+                <p class="price">Price: 5,000 PKR</p>
                 <button class="btn" id="view-duck2"><a href="details/h2.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card duck3">
+            <div class="card duck3">
                 <div class="image-container">
                     <img src="images/h3.png" alt="Muscovy">
                 </div>
-            <h3>Muscovy</h3>
-            <p>Age: 1 Years</p>
-            <p>Gender: Male</p>
-            <p>Highly trained and loyal, ideal for security.</p>
-            <p class="price">Price: 1,000 PKR</p>
+                <h3>Muscovy</h3>
+                <p>Age: 1 Years</p>
+                <p>Gender: Male</p>
+                <p>Highly trained and loyal, ideal for security.</p>
+                <p class="price">Price: 1,000 PKR</p>
                 <button class="btn" id="view-duck3"><a href="details/h3.html">View Details</a></button>
-        </div>
+            </div>
 
-        <div class="card duck4">
+            <div class="card duck4">
                 <div class="image-container">
                     <img src="images/h4.png" alt="Call Duck">
                 </div>
-            <h3>Call Duck</h3>
-            <p>Age: 0.5 Years</p>
-            <p>Gender: Female</p>
-            <p>Sweet and affectionate, loves to cuddle.</p>
-            <p class="price">Price: 500 PKR</p>
+                <h3>Call Duck</h3>
+                <p>Age: 0.5 Years</p>
+                <p>Gender: Female</p>
+                <p>Sweet and affectionate, loves to cuddle.</p>
+                <p class="price">Price: 500 PKR</p>
                 <button class="btn" id="view-duck4"><a href="details/h4.html">View Details</a></button>
             </div>
         </div>
@@ -349,26 +393,26 @@
                 <h3>Follow Us</h3>
                 <div class="social-links">
                     <a href="https://facebook.com" target="_blank" class="social-link">
-    <i class="fab fa-facebook"></i>
-  </a>
+                        <i class="fab fa-facebook"></i>
+                    </a>
                     <a href="https://twitter.com" target="_blank" class="social-link">
-    <i class="fab fa-twitter"></i>
-  </a>
+                        <i class="fab fa-twitter"></i>
+                    </a>
                     <a href="https://instagram.com" target="_blank" class="social-link">
-    <i class="fab fa-instagram"></i>
-  </a>
+                        <i class="fab fa-instagram"></i>
+                    </a>
                 </div>
             </div>
         </div>
- 
+
         <div class="footer-bottom">
-        <div class="container">
-            <p>&copy; 2023 Pet Connect. All rights reserved.</p>
+            <div class="container">
+                <p>&copy; 2023 Pet Connect. All rights reserved.</p>
                 <p>Terms of Service | Privacy Policy | Cookie Policy</p>
             </div>
         </div>
     </footer>
-   
+
     <!-- Load header component first -->
     <script>
         // Fix the path issue by using the correct URL
@@ -401,7 +445,8 @@
         document.addEventListener('DOMContentLoaded', loadHeader);
     </script>
     <script src="./components/header.js"></script>
-       <script src="script.js"></script>
+    <script src="script.js"></script>
+    <script src="browse.js"></script>
 </body>
 
 </html>

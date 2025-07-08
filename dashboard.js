@@ -1,141 +1,179 @@
-// Check if user is logged in, if not redirect to login page
-if (!isLoggedIn()) {
-    window.location.href = 'login.html';
-}
-
-// Get user data
-const currentUser = getCurrentUser();
-
-// Initialize dashboard data in localStorage if it doesn't exist
-const DASHBOARD_KEY = 'pet_connect_dashboard';
-if (!localStorage.getItem(DASHBOARD_KEY)) {
-    localStorage.setItem(DASHBOARD_KEY, JSON.stringify({
-        users: {},
-    }));
-}
-
-// Get or initialize user's dashboard data
-function getUserDashboard(userId) {
-    const dashboardData = JSON.parse(localStorage.getItem(DASHBOARD_KEY));
-    if (!dashboardData.users[userId]) {
-        dashboardData.users[userId] = {
-            listings: [],
-            sales: [],
-            purchases: [],
-            monthlyActivity: Array(12).fill(0), // Monthly activity for the year
-        };
-        localStorage.setItem(DASHBOARD_KEY, JSON.stringify(dashboardData));
+document.addEventListener('DOMContentLoaded', async () => {
+    // Check if user is logged in
+    const userId = sessionStorage.getItem('userId');
+    if (!userId) {
+        window.location.href = 'login.html';
+        return;
     }
-    return dashboardData.users[userId];
-}
 
-// Get user's dashboard data
-const userDashboard = getUserDashboard(currentUser.email);
+    // Initialize variables for statistics
+    let activeListingsCount = 0;
+    let totalSales = 0;
+    let totalPurchases = 0;
+    let totalEarnings = 0;
 
-// Update statistics
-document.getElementById('activeListings').textContent = userDashboard.listings.filter(l => l.status === 'active').length;
-document.getElementById('totalSales').textContent = userDashboard.sales.length;
-document.getElementById('totalPurchases').textContent = userDashboard.purchases.length;
-
-// Calculate total earnings
-const totalEarnings = userDashboard.sales.reduce((sum, sale) => sum + sale.price, 0);
-document.getElementById('totalEarnings').textContent = `₹${totalEarnings.toFixed(2)}`;
-
-// Initialize monthly activity chart
-const ctx = document.getElementById('monthlyChart').getContext('2d');
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            label: 'Activity',
-            data: userDashboard.monthlyActivity,
-            backgroundColor: 'rgba(76, 175, 80, 0.2)',
-            borderColor: 'rgba(76, 175, 80, 1)',
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    stepSize: 1
-                }
+    try {
+        // Fetch user's listings
+        const response = await fetch('http://localhost:3000/api/listings/user', {
+            headers: {
+                'user-id': userId
             }
-        },
-        plugins: {
-            legend: {
-                display: false
-            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch listings');
         }
+
+        const listings = await response.json();
+
+        // Update statistics
+        activeListingsCount = listings.filter(listing => listing.status === 'active').length;
+        // Calculate total earnings from sold listings
+        totalEarnings = listings
+            .filter(listing => listing.status === 'sold')
+            .reduce((sum, listing) => sum + parseFloat(listing.price), 0);
+
+        // Update dashboard statistics
+        document.getElementById('activeListings').textContent = activeListingsCount;
+        document.getElementById('totalSales').textContent = listings.filter(listing => listing.status === 'sold').length;
+        document.getElementById('totalPurchases').textContent = totalPurchases; // Will be implemented with orders system
+        document.getElementById('totalEarnings').textContent = `₹${totalEarnings.toLocaleString()}`;
+
+        // Populate latest listings table
+        const tableBody = document.querySelector('#latestListings tbody');
+        tableBody.innerHTML = ''; // Clear existing content
+
+        listings.forEach(listing => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${listing.pet_type} - ${listing.breed}</td>
+                <td>₹${parseFloat(listing.price).toLocaleString()}</td>
+                <td><span class="status ${listing.status.toLowerCase()}">${listing.status}</span></td>
+                <td>
+                    <button class="action-btn" onclick="editListing(${listing.id})">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        // Create monthly activity chart
+        const monthlyData = getMonthlyData(listings);
+        createMonthlyChart(monthlyData);
+
+    } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        // Show error message to user
+        alert('Failed to load dashboard data. Please try again later.');
     }
-});
 
-// Sample data for latest listings (in a real app, this would come from your backend)
-const sampleListings = [
-    { name: 'Golden Retriever Puppy', price: 8000, status: 'active' },
-    { name: 'Persian Cat', price: 12000, status: 'pending' },
-    { name: 'Rabbit with Cage', price: 4500, status: 'sold' },
-    { name: 'Siamese Kitten', price: 6000, status: 'active' }
-];
+    // Handle sidebar navigation
+    const sidebarItems = document.querySelectorAll('.dashboard-sidebar li');
+    sidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // Remove active class from all items
+            sidebarItems.forEach(i => i.classList.remove('active'));
+            // Add active class to clicked item
+            item.classList.add('active');
 
-// Populate latest listings table
-const listingsTableBody = document.querySelector('#latestListings tbody');
-sampleListings.forEach(listing => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${listing.name}</td>
-        <td>₹${listing.price}</td>
-        <td><span class="status ${listing.status}">${listing.status}</span></td>
-        <td><button class="action-btn">View</button></td>
-    `;
-    listingsTableBody.appendChild(row);
-});
-
-// Handle sidebar navigation
-document.querySelectorAll('.dashboard-sidebar li').forEach(item => {
-    item.addEventListener('click', function () {
-        // Remove active class from all items
-        document.querySelectorAll('.dashboard-sidebar li').forEach(i => i.classList.remove('active'));
-        // Add active class to clicked item
-        this.classList.add('active');
-
-        // In a real app, you would handle navigation here
-        // For now, we'll just log the action
-        console.log('Navigating to:', this.textContent.trim());
+            // Handle navigation (to be implemented)
+            const section = item.textContent.trim().toLowerCase();
+            switch (section) {
+                case 'my listings':
+                    // Implement listings view
+                    break;
+                case 'my orders':
+                    // Implement orders view
+                    break;
+                case 'settings':
+                    // Implement settings view
+                    break;
+                default:
+                    // Overview is already shown
+                    break;
+            }
+        });
     });
 });
 
-// Add sample data function (for testing purposes)
-function addSampleData() {
-    const dashboardData = JSON.parse(localStorage.getItem(DASHBOARD_KEY));
-    const userId = currentUser.email;
+// Helper function to get monthly data for chart
+function getMonthlyData(listings) {
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const currentYear = new Date().getFullYear();
 
-    // Add sample listings
-    dashboardData.users[userId].listings = [
-        { id: 1, name: 'Golden Retriever', price: 8000, status: 'active', date: '2024-01-15' },
-        { id: 2, name: 'Persian Cat', price: 12000, status: 'pending', date: '2024-02-01' },
-        { id: 3, name: 'Rabbit', price: 4500, status: 'sold', date: '2024-02-15' }
-    ];
+    // Initialize data arrays
+    const activeData = new Array(12).fill(0);
+    const soldData = new Array(12).fill(0);
 
-    // Add sample sales
-    dashboardData.users[userId].sales = [
-        { id: 1, petName: 'Rabbit', price: 4500, date: '2024-02-15' }
-    ];
+    listings.forEach(listing => {
+        const listingDate = new Date(listing.created_at);
+        if (listingDate.getFullYear() === currentYear) {
+            const month = listingDate.getMonth();
+            if (listing.status === 'active') {
+                activeData[month]++;
+            } else if (listing.status === 'sold') {
+                soldData[month]++;
+            }
+        }
+    });
 
-    // Add sample purchases
-    dashboardData.users[userId].purchases = [
-        { id: 1, petName: 'Siamese Cat', price: 6000, date: '2024-01-20' }
-    ];
-
-    // Add sample monthly activity
-    dashboardData.users[userId].monthlyActivity = [2, 3, 4, 3, 5, 4, 3, 4, 5, 4, 3, 6];
-
-    localStorage.setItem(DASHBOARD_KEY, JSON.stringify(dashboardData));
-    location.reload(); // Refresh to show new data
+    return {
+        labels: months,
+        active: activeData,
+        sold: soldData
+    };
 }
 
-// Uncomment the line below to add sample data when testing
-// addSampleData(); 
+// Create monthly activity chart
+function createMonthlyChart(data) {
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: data.labels,
+            datasets: [
+                {
+                    label: 'Active Listings',
+                    data: data.active,
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    tension: 0.4
+                },
+                {
+                    label: 'Sold',
+                    data: data.sold,
+                    borderColor: '#2196F3',
+                    backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                    tension: 0.4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Function to handle listing edit
+function editListing(listingId) {
+    // Redirect to edit page or show edit modal
+    // To be implemented
+    console.log('Edit listing:', listingId);
+} 

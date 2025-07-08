@@ -1,6 +1,6 @@
 .dashboard-container {
-    display: flex; 
-    gap: 10px;  
+    display: flex;
+    gap: 10px;
     min-height: calc(100vh - 80px);
     background: #f8f9fa;
     margin-top: 8px;
@@ -155,6 +155,7 @@ td {
     color: #333;
 }
 
+/* Add these styles for status indicators */
 .status {
     padding: 4px 8px;
     border-radius: 4px;

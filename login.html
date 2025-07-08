@@ -255,7 +255,55 @@
         </div>
     </div>
 
-    <script src="auth.js"></script>
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const messageBox = document.getElementById('messageBox');
+
+            try {
+                const response = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Login failed');
+                }
+
+                // Show success message
+                messageBox.textContent = 'Login successful! Redirecting...';
+                messageBox.className = 'message success';
+                messageBox.style.display = 'block';
+
+                // Store minimal user info in session storage (more secure than localStorage)
+                sessionStorage.setItem('userId', data.user.id);
+                sessionStorage.setItem('userName', data.user.name);
+                sessionStorage.setItem('userEmail', data.user.email);
+                sessionStorage.setItem('isLoggedIn', 'true');
+
+                // Redirect to dashboard after successful login
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+
+            } catch (error) {
+                messageBox.textContent = error.message || 'Login failed. Please try again.';
+                messageBox.className = 'message error';
+                messageBox.style.display = 'block';
+            }
+        });
+    </script>
 </body>
 
 </html>

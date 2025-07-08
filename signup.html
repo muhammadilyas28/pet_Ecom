@@ -55,6 +55,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -188,6 +189,7 @@
                 opacity: 0;
                 transform: translateY(-10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -373,28 +375,38 @@
             }
 
             try {
-                // Here you would typically make an API call to your backend
-                // For now, we'll simulate a successful signup
-                console.log('Signup attempt:', { name, email });
+                // Make API call to backend
+                const response = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Access-Control-Allow-Origin': '*'
+                    },
+                    body: JSON.stringify({
+                        name,
+                        email,
+                        password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || 'Registration failed');
+                }
 
                 // Show success message
-                messageBox.textContent = 'Account created successfully! Redirecting...';
+                messageBox.textContent = 'Account created successfully! Redirecting to login...';
                 messageBox.className = 'message success';
                 messageBox.style.display = 'block';
 
-                // Store user info in localStorage
-                localStorage.setItem('userEmail', email);
-                localStorage.setItem('userName', name);
-                localStorage.setItem('userPassword', password);
-                localStorage.setItem('isLoggedIn', 'true');
-
-                // Redirect after a short delay
+                // Redirect to login page after successful registration
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+                    window.location.href = 'login.html';
                 }, 1500);
 
             } catch (error) {
-                messageBox.textContent = 'Signup failed. Please try again.';
+                messageBox.textContent = error.message || 'Registration failed. Please try again.';
                 messageBox.className = 'message error';
                 messageBox.style.display = 'block';
             }

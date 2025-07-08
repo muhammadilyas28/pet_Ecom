@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Pet Connect</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            background: url('images/shutterstock_1691197180.png') center/cover no-repeat fixed;
+        }
+
+        .auth-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(244, 224, 219, 0.95), rgba(240, 244, 248, 0.95));
+            backdrop-filter: blur(5px);
+        }
+
+        .auth-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-header h1 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-header p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .auth-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            color: #666;
+        }
+
+        .auth-footer a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .auth-footer a:hover {
+            color: #45a049;
+            text-decoration: underline;
+        }
+
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-to-home:hover {
+            color: #4CAF50;
+            background: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.success {
+            background-color: rgba(232, 245, 233, 0.95);
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .message.error {
+            background-color: rgba(255, 235, 238, 0.95);
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .password-requirements {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 0.75rem;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .password-requirements ul {
+            margin: 0.5rem 0 0 1.2rem;
+            padding: 0;
+        }
+
+        .password-requirements li {
+            margin-bottom: 0.2rem;
+            transition: color 0.3s;
+        }
+
+        .password-requirements li.valid {
+            color: #4CAF50;
+        }
+
+        .password-requirements li.invalid {
+            color: #f44336;
+        }
+
+        /* Add a subtle pattern overlay */
+        .pattern-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('data:image/svg+xml,%3Csvg width="20" height="20" xmlns="http://www.w3.org/2000/svg"%3E%3Cpath d="M0 0h20v20H0z" fill="%23000" fill-opacity=".05"/%3E%3C/svg%3E');
+            pointer-events: none;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="pattern-overlay"></div>
+    <a href="index.html" class="back-to-home">
+        <i class="fas fa-arrow-left"></i>
+        Back to Home
+    </a>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <h1>Create Account</h1>
+                <p>Join Pet Connect and find your perfect companion</p>
+            </div>
+
+            <div id="messageBox" class="message"></div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required placeholder="Create a password">
+                    <div class="password-requirements">
+                        Password requirements:
+                        <ul id="passwordChecklist">
+                            <li id="lengthCheck">At least 8 characters</li>
+                            <li id="upperCheck">One uppercase letter</li>
+                            <li id="lowerCheck">One lowercase letter</li>
+                            <li id="numberCheck">One number</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirm">Confirm Password</label>
+                    <input type="password" id="signupConfirm" required placeholder="Confirm your password">
+                </div>
+                <button type="submit" class="submit-btn">Create Account</button>
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="login.html">Login</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Password validation
+        const password = document.getElementById('signupPassword');
+        const lengthCheck = document.getElementById('lengthCheck');
+        const upperCheck = document.getElementById('upperCheck');
+        const lowerCheck = document.getElementById('lowerCheck');
+        const numberCheck = document.getElementById('numberCheck');
+
+        password.addEventListener('input', () => {
+            const value = password.value;
+
+            // Check length
+            if (value.length >= 8) {
+                lengthCheck.classList.add('valid');
+                lengthCheck.classList.remove('invalid');
+            } else {
+                lengthCheck.classList.add('invalid');
+                lengthCheck.classList.remove('valid');
+            }
+
+            // Check uppercase
+            if (/[A-Z]/.test(value)) {
+                upperCheck.classList.add('valid');
+                upperCheck.classList.remove('invalid');
+            } else {
+                upperCheck.classList.add('invalid');
+                upperCheck.classList.remove('valid');
+            }
+
+            // Check lowercase
+            if (/[a-z]/.test(value)) {
+                lowerCheck.classList.add('valid');
+                lowerCheck.classList.remove('invalid');
+            } else {
+                lowerCheck.classList.add('invalid');
+                lowerCheck.classList.remove('valid');
+            }
+
+            // Check number
+            if (/[0-9]/.test(value)) {
+                numberCheck.classList.add('valid');
+                numberCheck.classList.remove('invalid');
+            } else {
+                numberCheck.classList.add('invalid');
+                numberCheck.classList.remove('valid');
+            }
+        });
+
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirm').value;
+            const messageBox = document.getElementById('messageBox');
+
+            // Validate password requirements
+            if (password.length < 8 || !/[A-Z]/.test(password) ||
+                !/[a-z]/.test(password) || !/[0-9]/.test(password)) {
+                messageBox.textContent = 'Please meet all password requirements.';
+                messageBox.className = 'message error';
+                messageBox.style.display = 'block';
+                return;
+            }
+
+            // Check if passwords match
+            if (password !== confirmPassword) {
+                messageBox.textContent = 'Passwords do not match!';
+                messageBox.className = 'message error';
+                messageBox.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Here you would typically make an API call to your backend
+                // For now, we'll simulate a successful signup
+                console.log('Signup attempt:', { name, email });
+
+                // Show success message
+                messageBox.textContent = 'Account created successfully! Redirecting...';
+                messageBox.className = 'message success';
+                messageBox.style.display = 'block';
+
+                // Store user info in localStorage
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userName', name);
+                localStorage.setItem('userPassword', password);
+                localStorage.setItem('isLoggedIn', 'true');
+
+                // Redirect after a short delay
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+
+            } catch (error) {
+                messageBox.textContent = 'Signup failed. Please try again.';
+                messageBox.className = 'message error';
+                messageBox.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+
+</html>

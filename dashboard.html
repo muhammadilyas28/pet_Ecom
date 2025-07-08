@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Pet Connect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js for graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <!-- Header will be loaded here by header.js -->
+    <div id="header-placeholder"></div>
+
+    <div class="dashboard-container">
+        <div class="dashboard-sidebar">
+            <h3 style="margin-bottom: 10px;">Dashboard Menu</h3>
+            <ul>
+                <li class="active"><i class="fas fa-chart-line"></i> Overview</li>
+                <li><i class="fas fa-list"></i> My Listings</li>
+                <li><i class="fas fa-shopping-cart"></i> My Orders</li>
+                <li><i class="fas fa-cog"></i> Settings</li>
+            </ul>
+        </div>
+
+        <div class="dashboard-main">
+            <h1>Dashboard</h1>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Active Listings</h3>
+                        <p id="activeListings">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Sales</h3>
+                        <p id="totalSales">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cart-shopping"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Purchases</h3>
+                        <p id="totalPurchases">0</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Earnings</h3>
+                        <p id="totalEarnings">₹0</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="chart-card">
+                    <h3>Monthly Activity</h3>
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Latest Listings</h3>
+                    <div class="listings-table">
+                        <table id="latestListings">
+                            <thead>
+                                <tr>
+                                    <th>Pet</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load scripts -->
+    <script src="./components/header.js"></script>
+    <script src="auth.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

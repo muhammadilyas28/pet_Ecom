@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <link rel="stylesheet" href="style.css">
+     <link rel="stylesheet" href="sell.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     
+
+</head>
+<body>
+  <style>
+    body {
+        background: linear-gradient(135deg, #f4e0db, #f0f4f8);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+</style>
+     <header>
+        <div class="container">
+            <h1>Pet Connect</h1>
+           
+        </div>
+        <div class="auth-buttons">
+            <a href="#" class="auth-btn login-btn" id="loginBtn">Login</a>
+            <a href="#" class="auth-btn signup-btn" id="signupBtn">Sign Up</a>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="browse.html">Browse Pets</a></li>
+                <li><a href="sell.html">Sell a Pet</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="pettales.html">Pet tales</a></li>
+                <li><a href="vetadvice.html">vet advice</a></li>
+            </ul>
+        </div>
+    </nav>
+                     
+
+
+
+
+
+     
+<div class="form-container">
+  <h2>Post Your Pet Ad</h2>
+  <form>
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select id="category">
+        <option value="">Select</option>
+        <option value="bird">Bird</option>
+        <option value="hen">Hen</option>
+        <option value="duck">Duck</option>
+        <option value="cat">Cat</option>
+        <option value="dog">Dog</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="title">Ad Title</label>
+      <input type="text" id="title" placeholder="Enter Ad Title">
+    </div>
+
+    <div class="form-group">
+      <label for="breed">Breed Name</label>
+      <input type="text" id="breed" placeholder="Enter Breed Name">
+    </div>
+
+    <div class="form-group">
+      <label for="description">Description</label>
+      <textarea id="description" placeholder="Enter Description"></textarea>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="age-years">Age in Years</label>
+        <select id="age-years">
+          <option value="">Select</option>
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="age-months">Age in Months</label>
+        <select id="age-months">
+          <option value="">Select</option>
+          <option>0</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5</option>
+          <option>6</option>
+          <option>7</option>
+          <option>8</option>
+          <option>9</option>
+          <option>10</option>
+          <option>11</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="price">Price (PKR)</label>
+        <input type="number" id="price" placeholder="Enter Price">
+      </div>
+      <div class="form-group">
+        <label for="price-type">Price Type</label>
+        <select id="price-type">
+          <option value="">Select</option>
+          <option value="fixed">Fixed</option>
+          <option value="negotiable">Negotiable</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="location">Location</label>
+      <input type="text" id="location" placeholder="Search for a location">
+    </div>
+
+    <div class="row">
+      <div class="form-group">
+        <label for="province">Province</label>
+        <select id="province">
+          <option value="">Select</option>
+          <option value="punjab">Punjab</option>
+          <option value="sindh">Sindh</option>
+          <option value="kpk">Khyber Pakhtunkhwa</option>
+          <option value="balochistan">Balochistan</option>
+          <option value="islamabad">Islamabad</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="district">District</label>
+        <input type="text" id="district" placeholder="Enter District">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="image">Browse Image of Your Pet</label>
+      <input type="file" id="image" accept="image/*">
+    </div>
+
+    <button type="submit" class="submit-btn">Post Ad</button>
+    <br><br>
+     <button class="submit-btn" ><a href="index.html" >   go back Home page   </a></button>
+  </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <footer>
+      <div style="text-align: center; margin-top: 40px;">
+  <a href="https://facebook.com" target="_blank" style="margin: 0 15px; color: #3b5998; font-size: 30px;">
+    <i class="fab fa-facebook"></i>
+  </a>
+  <a href="https://twitter.com" target="_blank" style="margin: 0 15px; color: #1da1f2; font-size: 30px;">
+    <i class="fab fa-twitter"></i>
+  </a>
+  <a href="https://instagram.com" target="_blank" style="margin: 0 15px; color: #e1306c; font-size: 30px;">
+    <i class="fab fa-instagram"></i>
+  </a>
+ 
+</div>
+        <div class="container">
+            <p>&copy; 2023 Pet Connect. All rights reserved.</p>
+            <p>Contact us: info@petmarketplace.com | (123) 456-7890</p>
+        </div>
+    </footer>
+
+    
+
+
+
+
+           <script src="script.js"></script>
+</body>
+</html>

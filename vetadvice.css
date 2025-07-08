@@ -1,0 +1,303 @@
+/* Hero Section */
+.hero {
+  text-align: center;
+  padding: 60px 0;
+  margin-bottom: 40px;
+  background-size: cover;
+  background-position: center;
+}
+
+.hero h2 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2em;
+  color: #666;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Vet Advice Section */
+.vet-advice {
+  background-color: white;
+  border-radius: 15px;
+  padding: 40px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin: 0 20px 50px;
+}
+
+.vet-intro {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 40px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #eee;
+}
+
+.vet-photo {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.vet-info h3 {
+  color: #FF6B6B;
+  margin-bottom: 15px;
+  font-size: 1.5em;
+}
+
+.vet-info p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.advice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.advice-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 25px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.advice-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  font-size: 2.5em;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.advice-card h3 {
+  color: #FF6B6B;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.advice-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.advice-card ul li {
+  color: #666;
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.advice-card ul li::before {
+  content: "•";
+  color: #FF6B6B;
+  position: absolute;
+  left: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .hero {
+    padding: 40px 0;
+  }
+
+  .hero h2 {
+    font-size: 2em;
+  }
+
+  .hero p {
+    font-size: 1.1em;
+    padding: 0 20px;
+  }
+
+  .vet-advice {
+    padding: 30px;
+  }
+
+  .advice-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 30px 0;
+  }
+
+  .hero h2 {
+    font-size: 1.8em;
+  }
+
+  .hero p {
+    font-size: 1em;
+  }
+
+  .vet-intro {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .vet-photo {
+    width: 150px;
+    height: 150px;
+  }
+
+  .advice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .advice-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 20px 0;
+  }
+
+  .hero h2 {
+    font-size: 1.5em;
+  }
+
+  .vet-advice {
+    padding: 20px;
+    margin: 0 10px 30px;
+  }
+
+  .vet-photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .vet-info h3 {
+    font-size: 1.3em;
+  }
+
+  .card-icon {
+    font-size: 2em;
+  }
+
+  .advice-card h3 {
+    font-size: 1.2em;
+  }
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Footer styles are inherited from style.css */
+h1 {
+  text-align: center;
+}
+
+/* Header */
+/* header {
+  background-color: aliceblue;
+  color: #333;
+  padding: 10px 0;
+  position: relative;
+  ;
+}
+
+.header-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+} */
+
+.auth-buttons {
+  position: absolute;
+  right: 20px;
+  top: 25px;
+}
+
+.auth-btn {
+  padding: 8px 15px;
+  margin-left: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.login-btn {
+  background-color: transparent;
+  color: #333;
+  border: 2px solid #333;
+}
+
+.signup-btn {
+  background-color: #62b5e5;
+  color: white;
+  border: none;
+}
+
+.auth-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+footer {
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding: 30px 0;
+  margin-top: 50px;
+  font-weight: 400;
+  border-top: 1px solid #ccc;
+
+}
+
+.vet-advice {
+  background-color: #fff6f6;
+  border: 1px solid #eebbbb;
+  padding: 2em;
+  border-radius: 12px;
+  margin: 2em auto;
+  max-width: 800px;
+  box-shadow: 0 2px 10px rgba(255, 192, 203, 0.3);
+}
+
+.vet-advice h2 {
+  text-align: center;
+  color: #d14e6f;
+  margin-bottom: 1em;
+}
+
+.vet-desc {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 1.5em;
+  color: #333;
+}
+
+.vet-box h3 {
+  color: #d4626f;
+  margin-top: 1em;
+}
+
+.vet-box p {
+  margin: 0.3em 0 1em 0;
+  color: #444;
+}

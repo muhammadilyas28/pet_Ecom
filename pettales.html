@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pet Tales - Pet Connect</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="pettales.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f4e0db, #f0f4f8);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+    }
+
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+  </style>
+
+  <!-- Header will be loaded here by header.js -->
+  <div id="header-placeholder"></div>
+
+  <main>
+    <section class="hero">
+      <div class="container">
+        <h2>🐾 Pet Tales & Diet Info 🐾</h2>
+        <p>Read inspiring stories and diets of adorable pets!</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="pet-tales-grid">
+        <section class="pet-tale">
+          <div class="pet-tale-content">
+            <h2>🐶 Max the Golden Retriever</h2>
+            <div class="pet-info">
+              <div class="story">
+                <h3>Story</h3>
+                <p>Max was rescued from the streets and is now a therapy dog, bringing joy and comfort to hospital
+                  patients and elderly care homes. His gentle nature and loving personality make him perfect for this
+                  role.</p>
+              </div>
+              <div class="diet">
+                <h3>Diet</h3>
+                <ul>
+                  <li>High-quality chicken & rice formula</li>
+                  <li>Daily vitamin supplements</li>
+                  <li>Fresh water always available</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pet-tale">
+          <div class="pet-tale-content">
+            <h2>🐱 Luna the Cat</h2>
+            <div class="pet-info">
+              <div class="story">
+                <h3>Story</h3>
+                <p>Luna was adopted from a shelter and has become the most affectionate companion. She loves to cuddle
+                  and has a special talent for knowing when someone needs emotional support.</p>
+              </div>
+              <div class="diet">
+                <h3>Diet</h3>
+                <ul>
+                  <li>Premium dry kibble</li>
+                  <li>Weekly tuna treats</li>
+                  <li>Fresh water daily</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="pet-tale">
+          <div class="pet-tale-content">
+            <h2>🐰 Bella the Bunny</h2>
+            <div class="pet-info">
+              <div class="story">
+                <h3>Story</h3>
+                <p>Bella was born in a pet-friendly farm and loves hopping around in the garden. She's super friendly
+                  with kids and has become a favorite among family visitors.</p>
+              </div>
+              <div class="diet">
+                <h3>Diet</h3>
+                <ul>
+                  <li>Fresh vegetables (carrots, lettuce)</li>
+                  <li>High-quality hay</li>
+                  <li>Occasional fruit treats</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Pet Connect</h3>
+        <p class="footer-description">Connecting pet lovers with their perfect companions. Making pet
+          adoption and sales easier, safer, and more transparent.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="browse.html">Browse Pets</a></li>
+          <li><a href="sell.html">Sell a Pet</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Contact Info</h3>
+        <ul class="contact-info">
+          <li><i class="fas fa-envelope"></i> info@petconnect.com</li>
+          <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+          <li><i class="fas fa-map-marker-alt"></i> Pet Connect HQ, Pet Street</li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Follow Us</h3>
+        <div class="social-links">
+          <a href="https://facebook.com" target="_blank" class="social-link">
+            <i class="fab fa-facebook"></i>
+          </a>
+          <a href="https://twitter.com" target="_blank" class="social-link">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://instagram.com" target="_blank" class="social-link">
+            <i class="fab fa-instagram"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Load header component first -->
+  <script src="./components/header.js"></script>
+  <!-- Then load the main script -->
+  <script src="script.js"></script>
+</body>
+
+</html>

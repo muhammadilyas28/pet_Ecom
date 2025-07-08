@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Pet Connect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="contact.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f4e0db, #f0f4f8);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+
+    <!-- Header will be loaded here by header.js -->
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h2>Get in Touch</h2>
+                <p>We'd love to hear from you! Send us a message and we'll respond as soon as possible.</p>
+            </div>
+        </section>
+
+        <div class="container">
+            <div class="form-container">
+                <div class="left-section">
+                    <img src="./images/shutterstock_1691197180.png" alt="Contact Support" />
+                    <div class="info-box">
+                        <p>Feel Free To Contact & Hire Us For Your Solution!</p>
+                        <h3>FOLLOW US:</h3>
+                        <div class="social-icons">
+                            <a href="https://facebook.com" target="_blank">
+                                <img src="./images/icons8-facebook-24.png" alt="Facebook" />
+                            </a>
+                            <a href="https://twitter.com" target="_blank">
+                                <img src="./images/icons8-twitter-bird-24.png" alt="Twitter" />
+                            </a>
+                            <a href="https://instagram.com" target="_blank">
+                                <img src="./images/icons8-instagram-24.png" alt="Instagram" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-section">
+                    <h2>FILL THE FORM TO SEND US MESSAGE</h2>
+                    <form>
+                        <div class="form-row">
+                            <input type="text" placeholder="Name..." required />
+                            <input type="email" placeholder="E-mail..." required />
+                        </div>
+                        <div class="form-row">
+                            <input type="text" placeholder="Phone..." />
+                            <input type="text" placeholder="Address..." />
+                        </div>
+                        <textarea rows="5" placeholder="Message..."></textarea>
+                        <button type="submit">SEND US A MESSAGE</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Pet Connect</h3>
+                <p class="footer-description">Connecting pet lovers with their perfect companions. Making pet
+                    adoption and sales easier, safer, and more transparent.</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="browse.html">Browse Pets</a></li>
+                    <li><a href="sell.html">Sell a Pet</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> info@petconnect.com</li>
+                    <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Pet Connect HQ, Pet Street</li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank" class="social-link">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank" class="social-link">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank" class="social-link">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- <div class="footer-bottom">
+    <div class="container">
+        <p>&copy; 2023 Pet Connect. All rights reserved.</p>
+                <p>Terms of Service | Privacy Policy | Cookie Policy</p>
+    </div>
+        </div> -->
+    </footer>
+
+    <!-- Load header component first -->
+    <script src="./components/header.js"></script>
+    <!-- Then load the main script -->
+    <script src="script.js"></script>
+</body>
+
+</html>

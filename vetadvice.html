@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vet Advice - Pet Connect</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="vetadvice.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <style>
+    
+        body {
+            background: linear-gradient(135deg, #f4e0db, #f0f4f8);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    
+  </style>
+
+  <!-- Header will be loaded here by header.js -->
+  <div id="header-placeholder"></div>
+
+  <main>
+    <section class="hero" style="background-image: url('./images/doctors.jpg'); object-fit: cover;">
+      <div class="container">
+        <h2 style="color: white;">👨‍⚕️ Expert Veterinary Advice</h2>
+        <p style="color: white;">Professional guidance for your pet's health and well-being</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <section class="vet-advice">
+        <div class="vet-intro">
+          <img src="./images/dp.jpg" alt="Dr. Syed Asad Abid" class="vet-photo">
+          <div class="vet-info">
+            <h3>Meet Our Expert</h3>
+            <p>We consulted with <strong>Dr. Syed Asad Abid</strong>, a certified veterinary specialist with 10+ years
+              of experience in animal care, to share valuable insights on pet nutrition and well-being.</p>
+          </div>
+        </div>
+
+        <div class="advice-grid">
+          <div class="advice-card">
+            <div class="card-icon">🐶</div>
+            <h3>Tips for Dogs</h3>
+            <ul>
+              <li>Include lean protein and rice in diet</li>
+              <li>Ensure regular exercise and playtime</li>
+              <li>Avoid chocolate, grapes, and onions</li>
+              <li>Regular vet check-ups are essential</li>
+            </ul>
+          </div>
+
+          <div class="advice-card">
+            <div class="card-icon">🐱</div>
+            <h3>Tips for Cats</h3>
+            <ul>
+              <li>Feed high-protein food</li>
+              <li>Fresh water always available</li>
+              <li>Include wet food for hydration</li>
+              <li>Avoid dog food and dairy products</li>
+            </ul>
+          </div>
+
+          <div class="advice-card">
+            <div class="card-icon">🐰</div>
+            <h3>Tips for Rabbits</h3>
+            <ul>
+              <li>80% of diet should be hay</li>
+              <li>Fresh vegetables daily</li>
+              <li>Avoid iceberg lettuce</li>
+              <li>Regular dental checks important</li>
+            </ul>
+          </div>
+          <div class="advice-card">
+            <div class="card-icon">🐦</div>
+            <h3>Tips for Birds</h3>
+            <ul>
+              <li>Feed a balanced diet</li>
+              <li>Provide fresh water</li>
+              <li>Keep cage clean</li>
+              <li>Regular check-ups</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Pet Connect</h3>
+        <p class="footer-description">Connecting pet lovers with their perfect companions. Making pet
+          adoption and sales easier, safer, and more transparent.</p>
+      </div>
+
+      <div class="footer-section">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="browse.html">Browse Pets</a></li>
+          <li><a href="sell.html">Sell a Pet</a></li>
+          <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Contact Info</h3>
+        <ul class="contact-info">
+          <li><i class="fas fa-envelope"></i> info@petconnect.com</li>
+          <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+          <li><i class="fas fa-map-marker-alt"></i> Pet Connect HQ, Pet Street</li>
+        </ul>
+      </div>
+
+      <div class="footer-section">
+        <h3>Follow Us</h3>
+        <div class="social-links">
+          <a href="https://facebook.com" target="_blank" class="social-link">
+            <i class="fab fa-facebook"></i>
+          </a>
+          <a href="https://twitter.com" target="_blank" class="social-link">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="https://instagram.com" target="_blank" class="social-link">
+            <i class="fab fa-instagram"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Load header component first -->
+  <script src="./components/header.js"></script>
+  <!-- Then load the main script -->
+  <script src="script.js"></script>
+</body>
+
+</html>

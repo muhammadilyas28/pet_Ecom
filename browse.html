@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Pets - Pet Connect</title>
+     <link rel="stylesheet" href="style.css">
+      <link rel="stylesheet" href="browse.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f4e0db, #f0f4f8);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+
+    <!-- Header will be loaded here by header.js -->
+    <div id="header-placeholder"></div>
+
+    <section class="browse-section">
+        <h1 id="categ">Select Category</h1>
+        <div class="category">
+            <div class="further" data-category="dogs"><img src="dog.png" alt="Dogs">
+            <h4>Dogs are here</h4>
+            </div>
+            <div class="further" data-category="ducks"><img src="hen.png" alt="Hens">
+                <h4>Hens are Ducks</h4>
+            </div>
+            <div class="further" data-category="birds"><img src="birds.png" alt="Birds">
+                <h4>Birds are here</h4>
+            </div>
+            <div class="further" data-category="cats"><img src="cat.png" alt="Cats">
+                <h4>Cats are here</h4>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Pet sections -->
+    <section class="section" id="dogs-section">
+    <h1>Dogs Are Here</h1>
+    <div class="card-container">
+        <div class="card dog1">
+                <div class="image-container">
+                    <img src="images/d1.png" alt="Bruno">
+                </div>
+            <h3>Bruno</h3>
+            <p>Age: 2 Years</p>
+            <p>Gender: Male</p>
+            <p>A playful and energetic dog, perfect for families.</p>
+            <p class="price">Price: 12,000 PKR</p>
+            <button class="btn" id="view-dog1"><a href="details/d1.html">View Details</a></button>
+        </div>
+
+        <div class="card dog2">
+                <div class="image-container">
+                    <img src="images/d2.png" alt="Luna">
+                </div>
+            <h3>Luna</h3>
+            <p>Age: 1.5 Years</p>
+            <p>Gender: Female</p>
+            <p>Calm and friendly, loves to be around children.</p>
+            <p class="price">Price: 15,000 PKR</p>
+            <button class="btn" id="view-dog2"><a href="details/d2.html">View Details</a></button>
+        </div>
+
+        <div class="card dog3">
+                <div class="image-container">
+                    <img src="images/d3.png" alt="Max">
+                </div>
+            <h3>Max</h3>
+            <p>Age: 3 Years</p>
+            <p>Gender: Male</p>
+            <p>Highly trained and loyal, ideal for security.</p>
+            <p class="price">Price: 20,000 PKR</p>
+            <button class="btn" id="view-dog3"><a href="details/d3.html">View Details</a></button>
+        </div>
+
+        <div class="card dog4">
+                <div class="image-container">
+                    <img src="images/d4.png" alt="Bella">
+                </div>
+            <h3>Bella</h3>
+            <p>Age: 2.5 Years</p>
+            <p>Gender: Female</p>
+            <p>Sweet and affectionate, loves to cuddle.</p>
+            <p class="price">Price: 10,500 PKR</p>
+            <button class="btn" id="view-dog4"><a href="details/d4.html">View Details</a></button>
+        </div>
+
+        <div class="card dog5">
+                <div class="image-container">
+                    <img src="images/d5.png" alt="Rocky">
+                </div>
+            <h3>Rocky</h3>
+            <p>Age: 1 Year</p>
+            <p>Gender: Male</p>
+            <p>Small breed, perfect for apartments and small homes.</p>
+            <p class="price">Price: 8,000 PKR</p>
+            <button class="btn" id="view-dog5"><a href="details/d5.html">View Details</a></button>
+        </div>
+
+        <div class="card dog6">
+                <div class="image-container">
+                    <img src="images/d6.png" alt="Daisy">
+                </div>
+            <h3>Daisy</h3>
+            <p>Age: 4 Months</p>
+            <p>Gender: Female</p>
+            <p>Super cute and in need of a loving home.</p>
+            <p class="price">Price: 9,500 PKR</p>
+            <button class="btn" id="view-dog6"><a href="details/d6.html">View Details</a></button>
+        </div>
+
+        <div class="card dog7">
+                <div class="image-container">
+                    <img src="images/d7.png" alt="Simba">
+                </div>
+            <h3>Simba</h3>
+            <p>Age: 2 Years</p>
+            <p>Gender: Male</p>
+            <p>Healthy and active, enjoys long walks and play.</p>
+            <p class="price">Price: 13,000 PKR</p>
+            <button class="btn" id="view-dog7"><a href="details/d7.html">View Details</a></button>
+        </div>
+
+        <div class="card dog8">
+                <div class="image-container">
+                    <img src="images/d8.png" alt="Lily">
+                </div>
+            <h3>Lily</h3>
+            <p>Age: 1 Year</p>
+            <p>Gender: Female</p>
+            <p>Very gentle and great around other pets.</p>
+            <p class="price">Price: 11,000 PKR</p>
+            <button class="btn" id="view-dog8"><a href="details/d8.html">View Details</a></button>
+        </div>
+    </div>
+</section>
+
+    <section class="section" id="birds-section" style="display: none;">
+    <h1>Birds Are Here</h1>
+    <div class="card-container">
+        <div class="card bird1">
+                <div class="image-container">
+                    <img src="images/b1.png" alt="Macaw">
+                </div>
+            <h3>Macaw</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Male</p>
+            <p>A playful and energetic bird, perfect for families.</p>
+            <p class="price">Price: 2,000 PKR</p>
+                <button class="btn" id="view-bird1"><a href="details/b1.html">View Details</a></button>
+        </div>
+
+        <div class="card bird2">
+                <div class="image-container">
+                    <img src="images/b2.png" alt="Kingfisher">
+                </div>
+            <h3>Kingfisher</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Female</p>
+            <p>Calm and friendly, loves to be around children.</p>
+            <p class="price">Price: 5,000 PKR</p>
+                <button class="btn" id="view-bird2"><a href="details/b2.html">View Details</a></button>
+        </div>
+
+        <div class="card bird3">
+                <div class="image-container">
+                    <img src="images/b3.png" alt="Toucan">
+                </div>
+            <h3>Toucan</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Male</p>
+            <p>Highly trained and loyal, ideal for security.</p>
+            <p class="price">Price: 1,000 PKR</p>
+                <button class="btn" id="view-bird3"><a href="details/b3.html">View Details</a></button>
+        </div>
+
+        <div class="card bird4">
+                <div class="image-container">
+                    <img src="images/b4.png" alt="Lorikeet">
+                </div>
+            <h3>Lorikeet</h3>
+            <p>Age: 0.5 Years</p>
+            <p>Gender: Female</p>
+            <p>Sweet and affectionate, loves to cuddle.</p>
+            <p class="price">Price: 500 PKR</p>
+                <button class="btn" id="view-bird4"><a href="details/b4.html">View Details</a></button>
+        </div>
+            </div>
+</section>
+
+    <section class="section" id="cats-section" style="display: none;">
+    <h1>Cats Are Here</h1>
+    <div class="card-container">
+        <div class="card cat1">
+                <div class="image-container">
+                    <img src="images/c1.png" alt="Persian">
+                </div>
+            <h3>Persian</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Male</p>
+            <p>A playful and energetic cat, perfect for families.</p>
+            <p class="price">Price: 2,000 PKR</p>
+                <button class="btn" id="view-cat1"><a href="details/c1.html">View Details</a></button>
+        </div>
+
+        <div class="card cat2">
+                <div class="image-container">
+                    <img src="images/c2.png" alt="Siamese">
+                </div>
+            <h3>Siamese</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Female</p>
+            <p>Calm and friendly, loves to be around children.</p>
+            <p class="price">Price: 5,000 PKR</p>
+                <button class="btn" id="view-cat2"><a href="details/c2.html">View Details</a></button>
+        </div>
+
+        <div class="card cat3">
+                <div class="image-container">
+                    <img src="images/c3.png" alt="Maine Coon">
+                </div>
+            <h3>Maine Coon</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Male</p>
+            <p>Highly trained and loyal, ideal for security.</p>
+            <p class="price">Price: 1,000 PKR</p>
+                <button class="btn" id="view-cat3"><a href="details/c3.html">View Details</a></button>
+        </div>
+
+        <div class="card cat4">
+                <div class="image-container">
+                    <img src="images/c4.png" alt="Ragdoll">
+                </div>
+            <h3>Ragdoll</h3>
+            <p>Age: 0.5 Years</p>
+            <p>Gender: Female</p>
+            <p>Sweet and affectionate, loves to cuddle.</p>
+            <p class="price">Price: 500 PKR</p>
+                <button class="btn" id="view-cat4"><a href="details/c4.html">View Details</a></button>
+        </div>
+            </div>
+</section>
+
+    <section class="section" id="ducks-section" style="display: none;">
+    <h1>Ducks Are Here</h1>
+    <div class="card-container">
+        <div class="card duck1">
+                <div class="image-container">
+                    <img src="images/h1.png" alt="Mallard">
+                </div>
+            <h3>Mallard</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Male</p>
+            <p>A playful and energetic cat, perfect for families.</p>
+            <p class="price">Price: 2,000 PKR</p>
+                <button class="btn" id="view-duck1"><a href="details/h1.html">View Details</a></button>
+        </div>
+
+        <div class="card duck2">
+                <div class="image-container">
+                    <img src="images/h2.png" alt="Pekin">
+                </div>
+            <h3>Pekin</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Female</p>
+            <p>Calm and friendly, loves to be around children.</p>
+            <p class="price">Price: 5,000 PKR</p>
+                <button class="btn" id="view-duck2"><a href="details/h2.html">View Details</a></button>
+        </div>
+
+        <div class="card duck3">
+                <div class="image-container">
+                    <img src="images/h3.png" alt="Muscovy">
+                </div>
+            <h3>Muscovy</h3>
+            <p>Age: 1 Years</p>
+            <p>Gender: Male</p>
+            <p>Highly trained and loyal, ideal for security.</p>
+            <p class="price">Price: 1,000 PKR</p>
+                <button class="btn" id="view-duck3"><a href="details/h3.html">View Details</a></button>
+        </div>
+
+        <div class="card duck4">
+                <div class="image-container">
+                    <img src="images/h4.png" alt="Call Duck">
+                </div>
+            <h3>Call Duck</h3>
+            <p>Age: 0.5 Years</p>
+            <p>Gender: Female</p>
+            <p>Sweet and affectionate, loves to cuddle.</p>
+            <p class="price">Price: 500 PKR</p>
+                <button class="btn" id="view-duck4"><a href="details/h4.html">View Details</a></button>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Pet Connect</h3>
+                <p class="footer-description">Connecting pet lovers with their perfect companions. Making pet adoption
+                    and sales easier, safer, and more transparent.</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="browse.html">Browse Pets</a></li>
+                    <li><a href="sell.html">Sell a Pet</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> info@petconnect.com</li>
+                    <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Pet Connect HQ, Pet Street</li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank" class="social-link">
+    <i class="fab fa-facebook"></i>
+  </a>
+                    <a href="https://twitter.com" target="_blank" class="social-link">
+    <i class="fab fa-twitter"></i>
+  </a>
+                    <a href="https://instagram.com" target="_blank" class="social-link">
+    <i class="fab fa-instagram"></i>
+  </a>
+                </div>
+            </div>
+        </div>
+ 
+        <div class="footer-bottom">
+        <div class="container">
+            <p>&copy; 2023 Pet Connect. All rights reserved.</p>
+                <p>Terms of Service | Privacy Policy | Cookie Policy</p>
+            </div>
+        </div>
+    </footer>
+   
+    <!-- Load header component first -->
+    <script>
+        // Fix the path issue by using the correct URL
+        async function loadHeader() {
+            try {
+                const response = await fetch('./components/header.html');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const headerHtml = await response.text();
+                document.getElementById('header-placeholder').innerHTML = headerHtml;
+
+                // Set active nav item
+                const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+                const navItems = document.querySelectorAll('nav a');
+                navItems.forEach(item => {
+                    if (item.getAttribute('href') === currentPage) {
+                        item.classList.add('active');
+                    }
+                });
+
+                // Initialize header functionality
+                initializeHeader();
+            } catch (error) {
+                console.error('Error loading header:', error);
+            }
+        }
+
+        // Load header when the document is ready
+        document.addEventListener('DOMContentLoaded', loadHeader);
+    </script>
+    <script src="./components/header.js"></script>
+       <script src="script.js"></script>
+</body>
+
+</html>

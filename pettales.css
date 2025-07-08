@@ -1,0 +1,352 @@
+ h1 {
+   text-align: center;
+ }
+
+ /* Header */
+ /* header {
+   background-color: aliceblue;
+   color: black;
+   padding: 10px 0;
+   text-align: center;
+   position: relative;
+ }
+
+ .header-container {
+   max-width: 800px;
+   margin: 0 auto;
+   padding: 0 20px;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+ } */
+
+ .auth-buttons {
+   position: absolute;
+   right: 20px;
+   top: 25px;
+ }
+
+ .auth-btn {
+   padding: 8px 15px;
+   margin-left: 10px;
+   border-radius: 5px;
+   text-decoration: none;
+   font-weight: bold;
+   transition: all 0.3s;
+ }
+
+ .login-btn {
+   background-color: transparent;
+   color: #333;
+   border: 2px solid #333;
+ }
+
+ .signup-btn {
+   background-color: #62b5e5;
+   color: white;
+   border: none;
+ }
+
+ .auth-btn:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+ }
+
+ /* Navbar */
+ /* nav {
+   height: 75px;
+   background-color: #ffffff;
+   padding: 0 20px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+ }
+
+ nav ul {
+   display: flex;
+   list-style: none;
+ }
+
+ nav ul li {
+   margin: 0 15px;
+ }
+
+ nav ul li a {
+   color: #333;
+   text-decoration: none;
+   font-weight: 500;
+   padding: 6px 12px;
+   border-radius: 5px;
+   transition: background-color 0.3s ease;
+ }
+
+ nav ul li a:hover,
+ nav ul li .active {
+   background-color: #e56363;
+   color: white;
+ } */
+
+ /* Footer */
+ footer {
+   background-color: #333;
+   color: white;
+   text-align: center;
+   padding: 30px 0;
+   margin-top: 50px;
+   font-weight: 400;
+   border-top: 1px solid #ccc;
+
+ }
+
+ .pet-tale {
+   border: 1px solid #ddd;
+   border-radius: 10px;
+   padding: 15px;
+   margin: 20px;
+   background-color: #f9f9f9;
+ }
+
+ .pet-tale h2 {
+   color: #ff6b6b;
+ }
+
+ /* Center the heading and subtext */
+ h1 {
+   text-align: center;
+   font-size: 2rem;
+   margin-bottom: 0.2em;
+ }
+
+
+
+ p.subtext {
+   text-align: center;
+   font-size: 1rem;
+   color: #444;
+   margin-bottom: 1.5em;
+ }
+
+ /* Pet Tale section */
+ .pet-tale {
+   background-color: #f9f9f9;
+   border: 1px solid #ddd;
+   border-radius: 10px;
+   padding: 1em;
+   margin: 1em auto;
+   max-width: 800px;
+   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+ }
+
+ /* Pet name */
+ .pet-tale h2 {
+   color: #e85d75;
+   font-weight: bold;
+   margin-bottom: 0.5em;
+ }
+
+ /* Labels */
+ .pet-tale strong {
+   color: #333;
+ }
+
+ /* Hero Section */
+ .hero {
+   background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('./images/unnamed (1).jpg');
+   background-size: cover;
+   background-position: center;
+   color: white;
+   text-align: center;
+   padding: 100px 0;
+   margin-bottom: 50px;
+ }
+
+ .hero h2 {
+   font-size: 3rem;
+   margin-bottom: 20px;
+   font-weight: 700;
+ }
+
+ .hero p {
+   font-size: 1.2rem;
+   max-width: 600px;
+   margin: 0 auto;
+ }
+
+ /* Pet Tales Grid */
+ .pet-tales-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+   gap: 30px;
+   padding: 20px 0;
+ }
+
+ .pet-tale {
+   background: white;
+   border-radius: 20px;
+   overflow: hidden;
+   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+   transition: transform 0.3s ease, box-shadow 0.3s ease;
+ }
+
+ .pet-tale:hover {
+   transform: translateY(-10px);
+   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+ }
+
+ .pet-tale-content {
+   padding: 25px;
+ }
+
+ .pet-tale h2 {
+   color: #333;
+   font-size: 1.8rem;
+   margin-bottom: 20px;
+   text-align: center;
+ }
+
+ .pet-info {
+   display: grid;
+   gap: 20px;
+ }
+
+ .story,
+ .diet {
+   background: #f8f9fa;
+   padding: 20px;
+   border-radius: 10px;
+ }
+
+ .story h3,
+ .diet h3 {
+   color: #4CAF50;
+   margin-bottom: 15px;
+   font-size: 1.2rem;
+ }
+
+ .story p {
+   color: #666;
+   line-height: 1.6;
+   margin-bottom: 10px;
+ }
+
+ .diet ul {
+   list-style-type: none;
+   padding: 0;
+ }
+
+ .diet ul li {
+   color: #666;
+   padding: 8px 0;
+   border-bottom: 1px solid #eee;
+   position: relative;
+   padding-left: 25px;
+ }
+
+ .diet ul li:last-child {
+   border-bottom: none;
+ }
+
+ .diet ul li:before {
+   content: '🍽️';
+   position: absolute;
+   left: 0;
+   top: 8px;
+   font-size: 14px;
+ }
+
+ /* Responsive Design */
+ @media (max-width: 992px) {
+   .hero h2 {
+     font-size: 2.5rem;
+   }
+
+   .pet-tales-grid {
+     grid-template-columns: repeat(2, 1fr);
+   }
+ }
+
+ @media (max-width: 768px) {
+   .hero {
+     padding: 60px 0;
+   }
+
+   .hero h2 {
+     font-size: 2rem;
+   }
+
+   .pet-tales-grid {
+     grid-template-columns: 1fr;
+   }
+
+   .pet-tale-content {
+     padding: 20px;
+   }
+ }
+
+ /* Footer Styles */
+ .footer-content {
+   display: grid;
+   grid-template-columns: repeat(4, 1fr);
+   gap: 30px;
+   padding: 50px 20px;
+   background: #333;
+   color: white;
+ }
+
+ .footer-section h3 {
+   color: white;
+   margin-bottom: 20px;
+   font-size: 1.2rem;
+ }
+
+ .footer-description {
+   color: #ccc;
+   line-height: 1.6;
+ }
+
+ .footer-section ul {
+   list-style: none;
+   padding: 0;
+ }
+
+ .footer-section ul li {
+   margin-bottom: 10px;
+ }
+
+ .footer-section ul li a {
+   color: #ccc;
+   text-decoration: none;
+   transition: color 0.3s ease;
+ }
+
+ .footer-section ul li a:hover {
+   color: white;
+ }
+
+ .social-links {
+   display: flex;
+   gap: 15px;
+ }
+
+ .social-link {
+   color: white;
+   font-size: 1.5rem;
+   transition: color 0.3s ease;
+ }
+
+ .social-link:hover {
+   color: #4CAF50;
+ }
+
+ @media (max-width: 992px) {
+   .footer-content {
+     grid-template-columns: repeat(2, 1fr);
+   }
+ }
+
+ @media (max-width: 576px) {
+   .footer-content {
+     grid-template-columns: 1fr;
+   }
+ }

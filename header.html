@@ -1,0 +1,76 @@
+<!-- Header Component -->
+<header>
+    <div class="container header-container">
+        <h1>Pet Connect</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html" id="nav-home">Home</a></li>
+                <li><a href="browse.html" id="nav-browse">Browse Pets</a></li>
+                <li><a href="sell.html" id="nav-sell">Sell a Pet</a></li>
+                <li><a href="about.html" id="nav-about">About Us</a></li>
+                <li><a href="contact.html" id="nav-contact">Contact</a></li>
+                <li><a href="pettales.html" id="nav-tales">Pet tales</a></li>
+                <li><a href="vetadvice.html" id="nav-vet">Vet Advice</a></li>
+            </ul>
+        </nav>
+        <div class="auth-buttons">
+            <a href="login.html" class="auth-btn login-btn">Login</a>
+            <a href="signup.html" class="auth-btn signup-btn">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+<style>
+    .user-menu {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .user-email {
+        color: #333;
+        font-size: 0.9rem;
+    }
+
+    .logout-btn {
+        padding: 0.5rem 1rem;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .logout-btn:hover {
+        background-color: #d32f2f;
+    }
+
+    .auth-btn {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: all 0.3s;
+    }
+
+    .login-btn {
+        background-color: transparent;
+        color: #4CAF50;
+        border: 1px solid #4CAF50;
+    }
+
+    .login-btn:hover {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .signup-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: 1px solid #4CAF50;
+    }
+
+    .signup-btn:hover {
+        background-color: #45a049;
+    }
+</style>

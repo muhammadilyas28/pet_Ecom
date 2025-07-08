@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sell Your Pet - Pet Connect</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="sell.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Header will be loaded here by header.js -->
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="sell-pet-sec1">
+            <div class="img-sec">
+                <h1>Find the Perfect Home for Your Pet</h1>
+                <p>Your pet deserves the best. Our platform connects caring pet owners with loving families, ensuring
+                    your
+                    beloved companion finds their ideal forever home.</p>
+                <p>At <strong>Pet Connect</strong>, we prioritize pet welfare and responsible rehoming. Our thorough
+                    screening process and supportive community help make the transition smooth and stress-free.</p>
+            </div>
+        </section>
+
+        <section class="sell-form-sec">
+            <div class="sell-pet">
+                <h2>List Your Pet</h2>
+                <form id="sellPetForm">
+                    <div class="type-and-gender">
+                        <div class="form-group">
+                            <label for="pet-type">
+                                <i class="fas fa-paw"></i> Pet Type
+                            </label>
+                            <select id="pet-type" required>
+                                <option value="">Select pet type</option>
+                                <option value="dog">🐕 Dog</option>
+                                <option value="cat">🐱 Cat</option>
+                                <option value="bird">🦜 Bird</option>
+                                <option value="rabbit">🐰 Rabbit</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-gender">
+                                <i class="fas fa-venus-mars"></i> Gender
+                            </label>
+                            <select id="pet-gender" required>
+                                <option value="">Select gender</option>
+                                <option value="male">♂ Male</option>
+                                <option value="female">♀ Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pet-breed">
+                            <i class="fas fa-tag"></i> Breed
+                        </label>
+                        <input type="text" id="pet-breed" placeholder="e.g., Golden Retriever, Persian Cat" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pet-age">
+                            <i class="fas fa-birthday-cake"></i> Age
+                        </label>
+                        <input type="text" id="pet-age" placeholder="e.g., 2 years, 6 months" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pet-price">
+                            <i class="fas fa-tag"></i> Price (Rs)
+                        </label>
+                        <input type="number" id="pet-price" placeholder="Enter your asking price" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pet-description">
+                            <i class="fas fa-comment-alt"></i> Description
+                        </label>
+                        <textarea id="pet-description"
+                            placeholder="Tell us about your pet's personality, health, training, and special needs. Include any unique traits or requirements for their new home."
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pet-photos">
+                            <i class="fas fa-camera"></i> Upload Photos
+                        </label>
+                        <input type="file" id="pet-photos" multiple accept="image/*" required>
+                        <small>
+                            <i class="fas fa-info-circle"></i> Upload clear, recent photos (max 5 photos, 5MB each)
+                        </small>
+                    </div>
+
+                    <button type="submit" class="btn">
+                        <i class="fas fa-paw"></i> List My Pet
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Pet Connect</h3>
+                <p class="footer-description">Connecting pet lovers with their perfect companions. Making pet
+                    adoption and sales easier, safer, and more transparent.</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="browse.html">Browse Pets</a></li>
+                    <li><a href="sell.html">Sell a Pet</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-envelope"></i> info@petconnect.com</li>
+                    <li><i class="fas fa-phone"></i> (123) 456-7890</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Pet Connect HQ, Pet Street</li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://facebook.com" target="_blank">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+                    <a href="https://twitter.com" target="_blank">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="https://instagram.com" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2023 Pet Connect. All rights reserved.</p>
+                <p>Terms of Service | Privacy Policy | Cookie Policy</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Load header component first -->
+    <script src="./components/header.js"></script>
+    <!-- Then load the main script -->
+    <script src="script.js"></script>
+    <!-- Load the sell form handler -->
+    <script src="sell.js"></script>
+</body>
+
+</html>

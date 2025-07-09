@@ -120,6 +120,9 @@ class ProductModal {
                 // Save cart back to localStorage
                 localStorage.setItem('cart', JSON.stringify(cart));
 
+                // Update dashboard stats
+                this.updateDashboardStats();
+
                 // Show success message
                 this.showToast('Added to cart successfully!');
 
@@ -152,21 +155,35 @@ class ProductModal {
         const stats = JSON.parse(localStorage.getItem('dashboardStats')) || {
             totalSales: 0,
             activeListings: 0,
-            totalEarnings: 0
+            totalEarnings: 0,
+            totalPurchases: 0
         };
 
+        // Extract numeric value from price string (remove currency and commas)
+        const priceValue = parseInt(this.currentProduct.price.replace(/[^0-9]/g, '')) || 0;
+
         // Update stats
-        stats.totalSales += 1;
-        stats.activeListings = document.querySelectorAll('.card').length - 1; // Subtract 1 for the card being removed
-        stats.totalEarnings += parseInt(this.currentProduct.price.replace(/[^0-9]/g, ''));
+        stats.totalPurchases += 1;
+        stats.totalEarnings += priceValue;
 
         // Save updated stats
         localStorage.setItem('dashboardStats', JSON.stringify(stats));
 
-        // Update dashboard if it's open
-        if (window.updateDashboardStats) {
-            window.updateDashboardStats();
-        }
+        // Update dashboard elements if they exist
+        const dashboardElements = {
+            'totalPurchases': stats.totalPurchases,
+            'totalEarnings': `₹${stats.totalEarnings.toLocaleString()}`,
+            'totalSales': stats.totalSales,
+            'activeListings': stats.activeListings
+        };
+
+        // Update each dashboard element if it exists
+        Object.entries(dashboardElements).forEach(([id, value]) => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = value;
+            }
+        });
     }
 
     showModal(productData) {

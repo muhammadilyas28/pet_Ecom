@@ -212,6 +212,21 @@ class ProductModal {
             return `₹${parseFloat(price).toLocaleString()}`;
         };
 
+        // Handle image URL properly
+        let imageUrl = 'images/placeholder.png';
+        if (productData.photos && productData.photos.length > 0) {
+            const photoPath = productData.photos[0];
+            if (photoPath.startsWith('http')) {
+                imageUrl = photoPath;
+            } else if (photoPath.startsWith('/uploads/')) {
+                imageUrl = `http://localhost:3000${photoPath}`;
+            } else if (photoPath.startsWith('/images/')) {
+                imageUrl = photoPath.substring(1); // Remove leading slash
+            } else {
+                imageUrl = `http://localhost:3000/uploads/${photoPath}`;
+            }
+        }
+
         this.currentProduct = {
             id: productData.id,
             user_id: productData.user_id,
@@ -220,9 +235,7 @@ class ProductModal {
             gender: formatGender(productData.pet_gender),
             price: productData.price,
             description: productData.description || 'No description available',
-            image: Array.isArray(productData.photos) && productData.photos.length > 0
-                ? (productData.photos[0].startsWith('http') ? productData.photos[0] : `/uploads/${productData.photos[0]}`)
-                : '/images/placeholder.jpg',
+            image: imageUrl,
             pet_type: productData.pet_type || 'Not specified'
         };
 
@@ -230,7 +243,7 @@ class ProductModal {
         const mainImage = document.getElementById('modal-main-image');
         mainImage.src = this.currentProduct.image;
         mainImage.onerror = () => {
-            mainImage.src = '/images/placeholder.jpg';
+            mainImage.src = 'images/placeholder.png';
             console.warn('Failed to load image, using placeholder');
         };
 

@@ -55,7 +55,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (section) {
                     const cardContainer = section.querySelector('.card-container');
                     const card = createListingCard(listing);
-                    cardContainer.insertBefore(card, cardContainer.firstChild);
+                    if (card) {
+                        cardContainer.insertBefore(card, cardContainer.firstChild);
+                    }
                 } else {
                     console.warn(`Section not found for pet type: ${petType}`);
                 }
@@ -95,57 +97,52 @@ function createListingCard(listing) {
             currency: 'PKR'
         });
 
-        // Ensure photos array exists and has at least one item
-        const photoUrl = Array.isArray(listing.photos) && listing.photos.length > 0
-            ? `http://localhost:3000${listing.photos[0]}`
-            : 'images/placeholder.png';
+        // Format gender to be properly capitalized
+        const gender = listing.pet_gender
+            ? listing.pet_gender.charAt(0).toUpperCase() + listing.pet_gender.slice(1).toLowerCase()
+            : 'Not specified';
+
+        // Handle image URL properly
+        let photoUrl = 'images/placeholder.png';
+        if (listing.photos && listing.photos.length > 0) {
+            const photoPath = listing.photos[0];
+            if (photoPath.startsWith('http')) {
+                photoUrl = photoPath;
+            } else if (photoPath.startsWith('/uploads/')) {
+                photoUrl = `http://localhost:3000${photoPath}`;
+            } else if (photoPath.startsWith('/images/')) {
+                photoUrl = photoPath.substring(1); // Remove leading slash
+            } else {
+                photoUrl = `http://localhost:3000/uploads/${photoPath}`;
+            }
+        }
 
         card.innerHTML = `
             <div class="image-container">
-                <img src="${photoUrl}" alt="${listing.breed || 'Pet'}" 
+                <img src="${photoUrl}" 
+                     alt="${listing.breed || 'Pet'}" 
                      onerror="this.src='images/placeholder.png'"
                      loading="lazy">
             </div>
             <h3>${listing.breed || 'Unknown Breed'}</h3>
             <p>Age: ${listing.age || 'Not specified'}</p>
-            <p>Gender: ${listing.pet_gender || 'Not specified'}</p>
-            <p>${listing.description || 'No description available'}</p>
+            <p>Gender: ${gender}</p>
+            <p>Pet Type: ${listing.pet_type || 'Not specified'}</p>
             <p class="price">Price: ${price}</p>
             <button class="btn view-details" data-id="${listing.id}">View Details</button>
         `;
 
-        // Add click handler for view details button
-        const viewButton = card.querySelector('.view-details');
-        viewButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            const productData = {
-                id: `listing-${listing.id}`,
-                name: listing.breed,
-                image: photoUrl,
-                age: listing.age,
-                gender: listing.pet_gender,
-                description: listing.description,
-                price: price,
-                features: [
-                    'Health checked and vaccinated',
-                    'Comes with initial food supply',
-                    'Free first vet consultation',
-                    'Training guidelines included'
-                ]
-            };
-            window.productModal.showModal(productData);
+        // Add click event listener for view details button
+        const viewDetailsBtn = card.querySelector('.view-details');
+        viewDetailsBtn.addEventListener('click', () => {
+            productModal.showModal(listing);
         });
 
+        return card;
     } catch (error) {
-        console.error('Error creating card HTML:', error);
-        card.innerHTML = `
-            <div class="error-card">
-                <p>Error displaying this listing</p>
-            </div>
-        `;
+        console.error('Error creating listing card:', error);
+        return null;
     }
-
-    return card;
 }
 
 function initializeCategories() {

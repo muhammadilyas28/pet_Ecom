@@ -3,6 +3,8 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
+const pool = require('./backend/config/db');
 require('dotenv').config();
 
 const app = express();
@@ -40,99 +42,66 @@ function checkFileType(file, cb) {
     const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
     // Check mime type
     const mimetype = filetypes.test(file.mimetype);
-    
 
-            // Check if email already exists
-            const userExists = await pool.query(
-                'SELECT * FROM users WHERE email = $1',
-                [email]
-            );
+    if (extname && mimetype) {
+        return cb(null, true);
+    } else {
+        cb(new Error('Only image files are allowed'));
+    }
+}
 
-            if (userExists.rows.length > 0) {
-                return res.status(400).json({ message: 'Email already registered' });
-            }
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB limit
+    },
+    fileFilter: function (req, file, cb) {
+        checkFileType(file, cb);
+    }
+});
 
-            // Hash password
-            const saltRounds = 10;
-            const hashedPassword = await bcrypt.hash(password, saltRounds);
+// Middleware
+app.use(express.json());
 
-            // Insert new user
-            const result = await pool.query(
-                'INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id',
-                [name, email, hashedPassword]
-            );
+// Serve static files from public directory
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
-            res.status(201).json({
-                message: 'User registered successfully',
-                userId: result.rows[0].id
-            });
+// Routes
+app.use('/api/auth', require('./backend/routes/auth'));
+app.use('/api/listings', require('./backend/routes/listings'));
 
-            const upload = multer({
-                storage: storage,
-                limits: {
-                    fileSize: 5 * 1024 * 1024 // 5MB limit
-                },
-                fileFilter: function (req, file, cb) {
-                    checkFileType(file, cb);
-                }
-            });
-
-            // Middleware
-            app.use(express.json());
-
-            // Serve static files from public directory
-            app.use('/public', express.static(path.join(__dirname, 'public')));
-            app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
-
-            // Routes
-            app.use('/api/auth', require('./backend/routes/auth'));
-            app.use('/api/listings', require('./backend/routes/listings'));
-
-            // File upload endpoint
-            app.post('/api/upload', upload.array('photos', 5), (req, res) => {
-                try {
-                    const files = req.files;
-                    if (!files || files.length === 0) {
-                        return res.status(400).json({ message: 'No files uploaded' });
-                    }
-
-                    // Return array of file paths with the correct URL prefix
-                    const filePaths = files.map(file => `/uploads/${file.filename}`);
-                    res.json({ paths: filePaths });
-                } catch (error) {
-                    console.error('Upload error:', error);
-                    res.status(500).json({ message: 'Error uploading files' });
-                }
-            });
-
-            // Error handling middleware
-            app.use((err, req, res, next) => {
-                if (err instanceof multer.MulterError) {
-                    if (err.code === 'LIMIT_FILE_SIZE') {
-                        return res.status(400).json({ message: 'File too large. Maximum size is 5MB.' });
-                    }
-                    return res.status(400).json({ message: err.message });
-                }
-                console.error(err.stack);
-                res.status(400).json({ message: err.message || 'Something went wrong!' });
-            });
-
-            const PORT = process.env.PORT || 3000;
-
-            app.listen(PORT, () => {
-                console.log(`Server running on port ${PORT}`);
-            }); 
-        } catch (error) {
-            console.error('Registration error:', error);
-            res.status(500).json({ message: 'Server error during registration' });
+// File upload endpoint
+app.post('/api/upload', upload.array('photos', 5), (req, res) => {
+    try {
+        const files = req.files;
+        if (!files || files.length === 0) {
+            return res.status(400).json({ message: 'No files uploaded' });
         }
 
-        
-    
-    
+        // Return array of file paths with the correct URL prefix
+        const filePaths = files.map(file => `/uploads/${file.filename}`);
+        res.json({ paths: filePaths });
+    } catch (error) {
+        console.error('Upload error:', error);
+        res.status(500).json({ message: 'Error uploading files' });
+    }
+});
 
-    const PORT = process.env.PORT || 3000;
+// Error handling middleware
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        if (err.code === 'LIMIT_FILE_SIZE') {
+            return res.status(400).json({ message: 'File too large. Maximum size is 5MB.' });
+        }
+        return res.status(400).json({ message: err.message });
+    }
+    console.error(err.stack);
+    res.status(400).json({ message: err.message || 'Something went wrong!' });
+});
 
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`); 
-    })
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

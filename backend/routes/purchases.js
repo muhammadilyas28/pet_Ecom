@@ -12,6 +12,206 @@ const requireAuth = (req, res, next) => {
     next();
 };
 
+// @route   POST /api/purchases/cart
+// @desc    Add item to cart (creates pending purchase)
+// @access  Private
+router.post('/cart', requireAuth, async (req, res) => {
+    try {
+        const { listing_id, seller_id, price } = req.body;
+        const buyer_id = req.userId;
+
+        // Validate required fields
+        if (!listing_id || !seller_id || !price) {
+            return res.status(400).json({
+                message: 'Listing ID, seller ID, and price are required'
+            });
+        }
+
+        // Check if item is already in cart
+        const existingCart = await pool.query(
+            `SELECT id FROM purchase_history 
+             WHERE user_id = $1 AND listing_id = $2 AND status = 'pending'`,
+            [buyer_id, listing_id]
+        );
+
+        if (existingCart.rows.length > 0) {
+            return res.status(400).json({
+                message: 'Item already in cart'
+            });
+        }
+
+        // Add to cart (create pending purchase)
+        const cartResult = await pool.query(
+            `INSERT INTO purchase_history (user_id, seller_id, listing_id, price, status, purchase_date)
+             VALUES ($1, $2, $3, $4, 'pending', CURRENT_TIMESTAMP)
+             RETURNING id, user_id, seller_id, listing_id, price, status, purchase_date`,
+            [buyer_id, seller_id, listing_id, price]
+        );
+
+        const cartItem = cartResult.rows[0];
+
+        res.status(201).json({
+            message: 'Item added to cart successfully',
+            cartItem
+        });
+    } catch (error) {
+        console.error('Error adding to cart:', error);
+        res.status(500).json({
+            message: 'Server error while adding to cart',
+            error: error.message
+        });
+    }
+});
+
+// @route   GET /api/purchases/cart
+// @desc    Get user's cart items
+// @access  Private
+router.get('/cart', requireAuth, async (req, res) => {
+    try {
+        const result = await pool.query(
+            `SELECT 
+                ph.id as purchase_id,
+                ph.listing_id,
+                ph.price,
+                ph.status,
+                ph.purchase_date,
+                pl.pet_type,
+                pl.breed,
+                pl.photos,
+                pl.description,
+                pl.pet_gender,
+                pl.age
+             FROM purchase_history ph
+             JOIN pet_listings pl ON ph.listing_id = pl.id
+             WHERE ph.user_id = $1 AND ph.status = 'pending'
+             ORDER BY ph.purchase_date DESC`,
+            [req.userId]
+        );
+
+        // Format the response
+        const cartItems = result.rows.map(item => ({
+            ...item,
+            price: parseFloat(item.price).toFixed(2),
+            purchase_date: new Date(item.purchase_date).toISOString()
+        }));
+
+        res.json({
+            message: 'Cart items retrieved successfully',
+            cartItems
+        });
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.status(500).json({ message: 'Server error while fetching cart items' });
+    }
+});
+
+// @route   DELETE /api/purchases/cart/:id
+// @desc    Remove item from cart
+// @access  Private
+router.delete('/cart/:id', requireAuth, async (req, res) => {
+    try {
+        const result = await pool.query(
+            `DELETE FROM purchase_history 
+             WHERE id = $1 AND user_id = $2 AND status = 'pending'
+             RETURNING id`,
+            [req.params.id, req.userId]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({
+                message: 'Cart item not found or already removed'
+            });
+        }
+
+        res.json({
+            message: 'Item removed from cart successfully',
+            removedId: req.params.id
+        });
+    } catch (error) {
+        console.error('Error removing from cart:', error);
+        res.status(500).json({ message: 'Server error while removing cart item' });
+    }
+});
+
+// @route   POST /api/purchases/cart/checkout
+// @desc    Checkout items in cart
+// @access  Private
+router.post('/cart/checkout', requireAuth, async (req, res) => {
+    try {
+        // Start transaction
+        await pool.query('BEGIN');
+
+        try {
+            // Get all pending items in cart
+            const cartItems = await pool.query(
+                `SELECT ph.*, pl.status as listing_status
+                 FROM purchase_history ph
+                 JOIN pet_listings pl ON ph.listing_id = pl.id
+                 WHERE ph.user_id = $1 AND ph.status = 'pending'`,
+                [req.userId]
+            );
+
+            if (cartItems.rows.length === 0) {
+                throw new Error('Cart is empty');
+            }
+
+            // Check if any listings are already sold
+            const soldItems = cartItems.rows.filter(item => item.listing_status === 'sold');
+            if (soldItems.length > 0) {
+                throw new Error('Some items in your cart are no longer available');
+            }
+
+            // Update all cart items to completed
+            await pool.query(
+                `UPDATE purchase_history 
+                 SET status = 'completed', 
+                     purchase_date = CURRENT_TIMESTAMP
+                 WHERE user_id = $1 AND status = 'pending'`,
+                [req.userId]
+            );
+
+            // Update all listings to sold
+            const listingIds = cartItems.rows.map(item => item.listing_id);
+            await pool.query(
+                `UPDATE pet_listings 
+                 SET status = 'sold', 
+                     updated_at = CURRENT_TIMESTAMP
+                 WHERE id = ANY($1)`,
+                [listingIds]
+            );
+
+            // Update seller stats for each item
+            for (const item of cartItems.rows) {
+                await pool.query(
+                    `INSERT INTO user_stats (user_id, total_sales, total_earnings)
+                     VALUES ($1, 1, $2)
+                     ON CONFLICT (user_id)
+                     DO UPDATE SET 
+                        total_sales = user_stats.total_sales + 1,
+                        total_earnings = user_stats.total_earnings + $2,
+                        last_updated = CURRENT_TIMESTAMP`,
+                    [item.seller_id, item.price]
+                );
+            }
+
+            await pool.query('COMMIT');
+
+            res.json({
+                message: 'Checkout completed successfully',
+                purchasedItems: cartItems.rows.length
+            });
+        } catch (error) {
+            await pool.query('ROLLBACK');
+            throw error;
+        }
+    } catch (error) {
+        console.error('Error during checkout:', error);
+        res.status(500).json({
+            message: error.message || 'Server error during checkout'
+        });
+    }
+});
+
 // @route   POST /api/purchases
 // @desc    Create a new purchase record
 // @access  Private

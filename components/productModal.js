@@ -105,50 +105,71 @@ class ProductModal {
 
         const userId = localStorage.getItem('userId');
         if (!userId) {
-            this.showToast('Please login to make a purchase', 'error');
+            this.showToast('Please login to add items to cart', 'error');
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 1500);
             return;
         }
 
-        // Add purchase to database
-        fetch('http://localhost:3000/api/purchases', {
-            method: 'POST',
+        // First get the listing details to ensure we have the correct data
+        fetch(`http://localhost:3000/api/listings/${this.currentProduct.id}`, {
             headers: {
                 'Content-Type': 'application/json',
                 'user-id': userId
-            },
-            body: JSON.stringify({
-                listing_id: this.currentProduct.id,
-                seller_id: this.currentProduct.user_id,
-                price: parseFloat(this.currentProduct.price),
-                buyer_id: userId,
-                status: 'completed'
-            })
+            }
         })
+            .then(response => response.json())
+            .then(listing => {
+                if (!listing || !listing.id) {
+                    throw new Error('Listing not found');
+                }
+
+                // Create the purchase data
+                const purchaseData = {
+                    listing_id: listing.id,
+                    seller_id: listing.user_id,
+                    price: parseFloat(listing.price),
+                    status: 'pending'
+                };
+
+                // Now make the purchase API call
+                return fetch('http://localhost:3000/api/purchases', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'user-id': userId
+                    },
+                    body: JSON.stringify(purchaseData)
+                });
+            })
             .then(response => {
                 if (!response.ok) {
                     return response.json().then(data => {
-                        throw new Error(data.message || 'Failed to record purchase');
+                        throw new Error(data.message || 'Failed to add to cart');
                     });
                 }
                 return response.json();
             })
             .then(data => {
                 // Show success message
-                this.showToast('Purchase recorded successfully!');
+                this.showToast('Added to cart successfully!');
+
+                // Update cart count in header if it exists
+                const cartCount = document.querySelector('.cart-count');
+                if (cartCount) {
+                    const currentCount = parseInt(cartCount.textContent) || 0;
+                    cartCount.textContent = currentCount + 1;
+                }
 
                 // Close modal after a short delay
                 setTimeout(() => {
                     this.closeModal();
-                    // Refresh the page to update listing display
-                    window.location.reload();
                 }, 1000);
             })
             .catch(error => {
-                console.error('Purchase error:', error);
-                this.showToast(error.message || 'Failed to record purchase. Please try again.', 'error');
+                console.error('Add to cart error:', error);
+                this.showToast(error.message || 'Failed to add to cart. Please try again.', 'error');
             })
             .finally(() => {
                 // Reset button state

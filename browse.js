@@ -13,11 +13,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Please login to view listings');
         }
 
-        // Check if server is running with authentication
-        const serverCheck = await fetch('http://localhost:3000/api/listings/user', {
+        // Check if server is running
+        const serverCheck = await fetch('http://localhost:3000/api/listings', {
             headers: {
-                'Content-Type': 'application/json',
-                'user-id': userId
+                'Content-Type': 'application/json'
             }
         }).catch(() => {
             throw new Error('Cannot connect to server. Please make sure the backend server is running.');
@@ -27,11 +26,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             throw new Error('Server is not responding properly. Please try again later.');
         }
 
-        // Fetch active listings from the database
-        const response = await fetch('http://localhost:3000/api/listings/user', {
+        // Fetch all listings from the database
+        const response = await fetch('http://localhost:3000/api/listings', {
             headers: {
-                'Content-Type': 'application/json',
-                'user-id': userId
+                'Content-Type': 'application/json'
             }
         }).catch(() => {
             throw new Error('Cannot connect to server. Please make sure the backend server is running.');
@@ -44,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const listings = await response.json();
 
         if (listings.length === 0) {
-            errorMessage.textContent = 'No pets added for sale yet!';
+            errorMessage.textContent = 'No pets available for sale yet!';
             errorMessage.style.display = 'block';
             return;
         }

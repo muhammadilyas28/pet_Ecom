@@ -1,22 +1,53 @@
 // Initialize dashboard stats
-function initializeDashboardStats() {
-    // Get stats from localStorage or use defaults
-    const stats = JSON.parse(localStorage.getItem('dashboardStats')) || {
-        totalSales: 0,
-        activeListings: 0,
-        totalEarnings: 0,
-        totalPurchases: 0
-    };
+async function initializeDashboardStats() {
+    try {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            console.error('User ID not found');
+            return;
+        }
 
-    // Update dashboard elements
-    document.getElementById('totalSales').textContent = stats.totalSales;
-    document.getElementById('activeListings').textContent = stats.activeListings;
-    document.getElementById('totalPurchases').textContent = stats.totalPurchases;
-    document.getElementById('totalEarnings').textContent = `₹${stats.totalEarnings.toLocaleString()}`;
+        // Fetch user's listings
+        const response = await fetch('http://localhost:3000/api/listings/user', {
+            headers: {
+                'user-id': userId
+            }
+        });
 
-    // Initialize charts
-    initializeMonthlyChart();
-    initializeCategoryChart();
+        if (!response.ok) {
+            throw new Error('Failed to fetch listings');
+        }
+
+        const listings = await response.json();
+
+        // Count active listings
+        const activeListings = listings.filter(listing => listing.status === 'active').length;
+
+        // Get other stats from localStorage
+        const stats = JSON.parse(localStorage.getItem('dashboardStats')) || {
+            totalSales: 0,
+            totalEarnings: 0,
+            totalPurchases: 0
+        };
+
+        // Update active listings count
+        stats.activeListings = activeListings;
+        localStorage.setItem('dashboardStats', JSON.stringify(stats));
+
+        // Update UI
+        document.getElementById('activeListings').textContent = activeListings;
+        document.getElementById('totalSales').textContent = stats.totalSales;
+        document.getElementById('totalPurchases').textContent = stats.totalPurchases;
+        document.getElementById('totalEarnings').textContent = `₹${stats.totalEarnings.toLocaleString()}`;
+
+        // Initialize charts
+        initializeMonthlyChart();
+        initializeCategoryChart();
+
+    } catch (error) {
+        console.error('Error initializing dashboard:', error);
+        document.getElementById('activeListings').textContent = '0';
+    }
 }
 
 // Initialize monthly activity chart
@@ -37,12 +68,12 @@ function initializeMonthlyChart() {
             labels: labels,
             datasets: [{
                 label: 'Sales',
-                data: [0, 0, 0, 0, 0, 0], // Initialize with zeros
+                data: [0, 0, 0, 0, 0, 0],
                 borderColor: 'rgba(46, 204, 113, 1)',
                 tension: 0.4
             }, {
                 label: 'Purchases',
-                data: [0, 0, 0, 0, 0, 0], // Initialize with zeros
+                data: [0, 0, 0, 0, 0, 0],
                 borderColor: 'rgba(52, 152, 219, 1)',
                 tension: 0.4
             }]
@@ -72,7 +103,7 @@ function initializeCategoryChart() {
         data: {
             labels: ['Dogs', 'Cats', 'Birds', 'Others'],
             datasets: [{
-                data: [4, 3, 2, 1], // Sample data
+                data: [4, 3, 2, 1],
                 backgroundColor: [
                     'rgba(46, 204, 113, 0.8)',
                     'rgba(52, 152, 219, 0.8)',
@@ -93,19 +124,50 @@ function initializeCategoryChart() {
 }
 
 // Update dashboard stats when new data is available
-function updateDashboardStats() {
-    const stats = JSON.parse(localStorage.getItem('dashboardStats')) || {
-        totalSales: 0,
-        activeListings: 0,
-        totalEarnings: 0,
-        totalPurchases: 0
-    };
+async function updateDashboardStats() {
+    try {
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            console.error('User ID not found');
+            return;
+        }
 
-    // Update display elements
-    document.getElementById('totalSales').textContent = stats.totalSales;
-    document.getElementById('activeListings').textContent = stats.activeListings;
-    document.getElementById('totalPurchases').textContent = stats.totalPurchases;
-    document.getElementById('totalEarnings').textContent = `₹${stats.totalEarnings.toLocaleString()}`;
+        // Fetch fresh listings
+        const response = await fetch('http://localhost:3000/api/listings/user', {
+            headers: {
+                'user-id': userId
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to fetch listings');
+        }
+
+        const listings = await response.json();
+
+        // Count active listings
+        const activeListings = listings.filter(listing => listing.status === 'active').length;
+
+        // Get other stats
+        const stats = JSON.parse(localStorage.getItem('dashboardStats')) || {
+            totalSales: 0,
+            totalEarnings: 0,
+            totalPurchases: 0
+        };
+
+        // Update active listings count
+        stats.activeListings = activeListings;
+        localStorage.setItem('dashboardStats', JSON.stringify(stats));
+
+        // Update UI
+        document.getElementById('activeListings').textContent = activeListings;
+        document.getElementById('totalSales').textContent = stats.totalSales;
+        document.getElementById('totalPurchases').textContent = stats.totalPurchases;
+        document.getElementById('totalEarnings').textContent = `₹${stats.totalEarnings.toLocaleString()}`;
+
+    } catch (error) {
+        console.error('Error updating dashboard:', error);
+    }
 }
 
 // Initialize dashboard when DOM is loaded
@@ -120,6 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
             item.classList.add('active');
         });
     });
+
+    // Refresh stats every minute
+    setInterval(updateDashboardStats, 60000);
 });
 
 // Export updateDashboardStats for use in other files

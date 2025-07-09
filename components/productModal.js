@@ -103,51 +103,75 @@ class ProductModal {
         addToCartBtn.disabled = true;
         addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
 
-        try {
-            // Simulate API call (since we don't have a real backend)
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            this.showToast('Please login to make a purchase', 'error');
             setTimeout(() => {
-                // Get current cart from localStorage
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                window.location.href = 'login.html';
+            }, 1500);
+            return;
+        }
 
-                // Add item to cart
-                cart.push({
-                    id: this.currentProduct.id,
-                    name: this.currentProduct.name,
-                    price: this.currentProduct.price,
-                    image: this.currentProduct.image
-                });
-
-                // Save cart back to localStorage
-                localStorage.setItem('cart', JSON.stringify(cart));
-
-                // Update dashboard stats
-                this.updateDashboardStats();
-
+        // Add purchase to database
+        fetch('http://localhost:3000/api/purchases', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'user-id': userId
+            },
+            body: JSON.stringify({
+                listing_id: this.currentProduct.id,
+                seller_id: this.currentProduct.user_id,
+                price: this.currentProduct.price,
+                buyer_id: userId,
+                status: 'completed'
+            })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(data => {
+                        throw new Error(data.message || 'Failed to record purchase');
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
                 // Show success message
-                this.showToast('Added to cart successfully!');
+                this.showToast('Purchase recorded successfully!');
 
-                // Update cart count in header if it exists
-                const cartCount = document.querySelector('.cart-count');
-                if (cartCount) {
-                    const currentCount = parseInt(cartCount.textContent) || 0;
-                    cartCount.textContent = currentCount + 1;
+                // Update listing status to sold
+                return fetch(`http://localhost:3000/api/listings/${this.currentProduct.id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'user-id': userId
+                    },
+                    body: JSON.stringify({
+                        status: 'sold'
+                    })
+                });
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to update listing status');
                 }
 
                 // Close modal after a short delay
                 setTimeout(() => {
                     this.closeModal();
+                    // Refresh the page to update listing display
+                    window.location.reload();
                 }, 1000);
-            }, 500);
-        } catch (error) {
-            console.error('Add to cart error:', error);
-            this.showToast('Failed to add to cart. Please try again.', 'error');
-        } finally {
-            // Reset button state after a delay
-            setTimeout(() => {
+            })
+            .catch(error => {
+                console.error('Purchase error:', error);
+                this.showToast(error.message || 'Failed to record purchase. Please try again.', 'error');
+            })
+            .finally(() => {
+                // Reset button state
                 addToCartBtn.disabled = false;
                 addToCartBtn.innerHTML = 'Add to Cart';
-            }, 500);
-        }
+            });
     }
 
     updateDashboardStats() {
@@ -187,29 +211,67 @@ class ProductModal {
     }
 
     showModal(productData) {
+        // Ensure we have valid data
+        if (!productData) {
+            console.error('No product data provided');
+            return;
+        }
+
+        // Format gender to be properly capitalized
+        const formatGender = (gender) => {
+            if (!gender) return 'Not specified';
+            return gender.charAt(0).toUpperCase() + gender.slice(1).toLowerCase();
+        };
+
+        // Format price to PKR
+        const formatPrice = (price) => {
+            if (!price) return 'Price not specified';
+            return `₹${parseFloat(price).toLocaleString()}`;
+        };
+
         this.currentProduct = {
-            ...productData,
-            id: productData.id || `product-${Date.now()}` // Generate ID if not provided
+            id: productData.id,
+            user_id: productData.user_id,
+            name: productData.breed || 'Unknown Breed',
+            age: productData.age || 'Not specified',
+            gender: formatGender(productData.pet_gender),
+            price: productData.price,
+            description: productData.description || 'No description available',
+            image: Array.isArray(productData.photos) && productData.photos.length > 0
+                ? (productData.photos[0].startsWith('http') ? productData.photos[0] : `/uploads/${productData.photos[0]}`)
+                : '/images/placeholder.jpg',
+            pet_type: productData.pet_type || 'Not specified'
         };
 
         // Update modal content with product data
-        document.getElementById('modal-main-image').src = productData.image;
-        document.getElementById('modal-title').textContent = productData.name;
-        document.getElementById('modal-age').textContent = productData.age;
-        document.getElementById('modal-gender').textContent = productData.gender;
-        document.getElementById('modal-price').textContent = productData.price;
-        document.getElementById('modal-description').textContent = productData.description;
+        const mainImage = document.getElementById('modal-main-image');
+        mainImage.src = this.currentProduct.image;
+        mainImage.onerror = () => {
+            mainImage.src = '/images/placeholder.jpg';
+            console.warn('Failed to load image, using placeholder');
+        };
+
+        document.getElementById('modal-title').textContent = this.currentProduct.name;
+        document.getElementById('modal-age').textContent = `Age: ${this.currentProduct.age}`;
+        document.getElementById('modal-gender').textContent = `Gender: ${this.currentProduct.gender}`;
+        document.getElementById('modal-price').textContent = formatPrice(this.currentProduct.price);
+        document.getElementById('modal-description').textContent = this.currentProduct.description;
 
         // Add features if available
         const featuresList = document.getElementById('modal-features');
         featuresList.innerHTML = '';
-        if (productData.features) {
-            productData.features.forEach(feature => {
-                const li = document.createElement('li');
-                li.textContent = feature;
-                featuresList.appendChild(li);
-            });
-        }
+        const features = [
+            `Pet Type: ${this.currentProduct.pet_type}`,
+            `Breed: ${this.currentProduct.name}`,
+            `Age: ${this.currentProduct.age}`,
+            `Gender: ${this.currentProduct.gender}`
+        ];
+
+        features.forEach(feature => {
+            const li = document.createElement('li');
+            li.textContent = feature;
+            featuresList.appendChild(li);
+        });
 
         // Show modal
         this.modal.style.display = 'block';

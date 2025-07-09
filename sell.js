@@ -1,7 +1,7 @@
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Check if user is logged in
-    const userId = sessionStorage.getItem('userId');
+    const userId = localStorage.getItem('userId');
     if (!userId) {
         window.location.href = 'login.html';
         return;
@@ -83,9 +83,11 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Failed to create listing');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to create listing');
             }
+
+            const result = await response.json();
 
             // Show success message
             messageBox.textContent = 'Pet listing created successfully!';

@@ -122,7 +122,7 @@ class ProductModal {
             body: JSON.stringify({
                 listing_id: this.currentProduct.id,
                 seller_id: this.currentProduct.user_id,
-                price: this.currentProduct.price,
+                price: parseFloat(this.currentProduct.price),
                 buyer_id: userId,
                 status: 'completed'
             })
@@ -138,23 +138,6 @@ class ProductModal {
             .then(data => {
                 // Show success message
                 this.showToast('Purchase recorded successfully!');
-
-                // Update listing status to sold
-                return fetch(`http://localhost:3000/api/listings/${this.currentProduct.id}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'user-id': userId
-                    },
-                    body: JSON.stringify({
-                        status: 'sold'
-                    })
-                });
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to update listing status');
-                }
 
                 // Close modal after a short delay
                 setTimeout(() => {

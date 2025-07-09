@@ -127,6 +127,7 @@ function checkFileType(file, cb) {
             res.status(500).json({ message: 'Server error during registration' });
         }
     
+    
 
     const PORT = process.env.PORT || 3000;
 

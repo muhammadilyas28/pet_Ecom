@@ -291,10 +291,9 @@
                 messageBox.className = 'message success';
                 messageBox.style.display = 'block';
 
-                // Store user info in session storage
-                sessionStorage.setItem('userId', data.user.id);
-                sessionStorage.setItem('userName', data.user.name);
-                sessionStorage.setItem('userEmail', data.user.email);
+                // Store user info in localStorage instead of sessionStorage
+                localStorage.setItem('userId', data.user.id);
+                
 
                 // Redirect to dashboard after successful login
                 setTimeout(() => {

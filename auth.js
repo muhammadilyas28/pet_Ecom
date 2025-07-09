@@ -1,10 +1,3 @@
-// User data structure in localStorage
-const USER_EMAIL_KEY = 'userEmail';
-const USER_NAME_KEY = 'userName';
-const USER_PASSWORD_KEY = 'userPassword';
-
-// Initialize default user if none exists
-
 // Helper function to show messages
 function showMessage(element, message, type) {
     element.textContent = message;
@@ -77,28 +70,35 @@ if (signupForm) {
         }
 
         try {
-            // Check if email already exists
-            if (localStorage.getItem(USER_EMAIL_KEY) === email) {
-                showMessage(messageBox, 'Email already registered', 'error');
-                return;
+            // Make API call to backend
+            const response = await fetch('http://localhost:3000/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    password
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Registration failed');
             }
 
-            // Store user info
-            localStorage.setItem(USER_EMAIL_KEY, email);
-            localStorage.setItem(USER_NAME_KEY, name);
-            localStorage.setItem(USER_PASSWORD_KEY, password);
-            localStorage.setItem('isLoggedIn', 'true');
-
             // Show success message
-            showMessage(messageBox, 'Account created successfully! Redirecting to dashboard...', 'success');
+            showMessage(messageBox, 'Account created successfully! Redirecting to login...', 'success');
 
-            // Redirect to dashboard after a delay
+            // Redirect to login page after successful registration
             setTimeout(() => {
-                window.location.href = './dashboard.html';
-            }, 2000);
+                window.location.href = 'login.html';
+            }, 1500);
 
         } catch (error) {
-            showMessage(messageBox, 'An error occurred. Please try again.', 'error');
+            showMessage(messageBox, error.message || 'Registration failed. Please try again.', 'error');
             console.error('Signup error:', error);
         }
     });
@@ -107,12 +107,6 @@ if (signupForm) {
 // Handle login form
 const loginForm = document.getElementById('loginForm');
 if (loginForm) {
-    // Check if user is already logged in
-    if (isLoggedIn()) {
-        window.location.href = './dashboard.html';
-        return;
-    }
-
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const messageBox = document.getElementById('messageBox');
@@ -121,53 +115,45 @@ if (loginForm) {
         const password = document.getElementById('loginPassword').value;
 
         try {
-            // Get stored credentials
-            const storedEmail = localStorage.getItem(USER_EMAIL_KEY);
-            const storedPassword = localStorage.getItem(USER_PASSWORD_KEY);
+            const response = await fetch('http://localhost:3000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            });
 
-            if (email === storedEmail && password === storedPassword) {
-                // Set login status
-                localStorage.setItem('isLoggedIn', 'true');
+            const data = await response.json();
 
-                // Show success message
-                showMessage(messageBox, 'Login successful! Redirecting to dashboard...', 'success');
-
-                // Redirect to dashboard after a delay
-                setTimeout(() => {
-                    window.location.href = './dashboard.html';
-                }, 1500);
-            } else {
-                showMessage(messageBox, 'Invalid email or password', 'error');
+            if (!response.ok) {
+                throw new Error(data.message || 'Login failed');
             }
 
+            // Store user info in localStorage for session management
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userId', data.user.id);
+            localStorage.setItem('userName', data.user.name);
+            localStorage.setItem('userEmail', data.user.email);
+
+            // Show success message
+            showMessage(messageBox, 'Login successful! Redirecting to dashboard...', 'success');
+
+            // Redirect to dashboard after successful login
+            setTimeout(() => {
+                window.location.href = './dashboard.html';
+            }, 1500);
+
         } catch (error) {
-            showMessage(messageBox, 'An error occurred. Please try again.', 'error');
+            showMessage(messageBox, error.message || 'Login failed. Please try again.', 'error');
             console.error('Login error:', error);
         }
     });
 }
 
-// Check if user is logged in
-function isLoggedIn() {
-    return localStorage.getItem('isLoggedIn') === 'true';
-}
 
-// Get current user info
-function getCurrentUser() {
-    return {
-        name: localStorage.getItem(USER_NAME_KEY),
-        email: localStorage.getItem(USER_EMAIL_KEY)
-    };
-}
-
-// Logout function
-function logout() {
-    localStorage.removeItem(USER_EMAIL_KEY);
-    localStorage.removeItem(USER_NAME_KEY);
-    localStorage.removeItem(USER_PASSWORD_KEY);
-    localStorage.removeItem('isLoggedIn');
-    window.location.href = './login.html';
-}
 
 // Protect routes that require authentication
 function protectRoute() {

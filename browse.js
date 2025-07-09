@@ -7,18 +7,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadingIndicator.style.display = 'block';
         errorMessage.style.display = 'none';
 
-        // Check if server is running
-        const serverCheck = await fetch('http://localhost:3000/api/listings')
-            .catch(() => {
-                throw new Error('Cannot connect to server. Please make sure the backend server is running.');
-            });
-        console.log("serverCheck = = =  >", serverCheck);
+        // Get user token from localStorage
+        const userId = localStorage.getItem('userId');
+        if (!userId) {
+            throw new Error('Please login to view listings');
+        }
+
+        // Check if server is running with authentication
+        const serverCheck = await fetch('http://localhost:3000/api/listings/user', {
+            headers: {
+                'Content-Type': 'application/json',
+                'user-id': userId
+            }
+        }).catch(() => {
+            throw new Error('Cannot connect to server. Please make sure the backend server is running.');
+        });
+
         if (!serverCheck.ok) {
             throw new Error('Server is not responding properly. Please try again later.');
         }
 
         // Fetch active listings from the database
-        const response = await fetch('http://localhost:3000/api/listings');
+        const response = await fetch('http://localhost:3000/api/listings/user', {
+            headers: {
+                'Content-Type': 'application/json',
+                'user-id': userId
+            }
+        }).catch(() => {
+            throw new Error('Cannot connect to server. Please make sure the backend server is running.');
+        });
+
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.message || 'Failed to fetch listings');
@@ -26,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const listings = await response.json();
 
         if (listings.length === 0) {
-            errorMessage.textContent = 'No pets available at the moment. Please check back later!';
+            errorMessage.textContent = 'No pets added for sale yet!';
             errorMessage.style.display = 'block';
             return;
         }
@@ -55,6 +73,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching listings:', error);
         errorMessage.textContent = error.message || 'Failed to load listings. Please try again later.';
         errorMessage.style.display = 'block';
+
+        // If not logged in, redirect to login page
+        if (error.message === 'Please login to view listings') {
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+        }
     } finally {
         loadingIndicator.style.display = 'none';
     }

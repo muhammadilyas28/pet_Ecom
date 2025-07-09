@@ -237,25 +237,25 @@ document.getElementById('header-placeholder').innerHTML = `
 `;
 
 // Function to update the auth UI based on login status
-function updateAuthUI() {
-    const userSection = document.getElementById('userSection');
-    const guestSection = document.getElementById('guestSection');
-    const userNameSpan = document.getElementById('userName');
+// function updateAuthUI() {
+//     const userSection = document.getElementById('userSection');
+//     const guestSection = document.getElementById('guestSection');
+//     const userNameSpan = document.getElementById('userName');
 
-    const currentUser = getCurrentUser();
+//     const currentUser = getCurrentUser();
 
-    if (currentUser) {
-        userSection.style.display = 'flex';
-        guestSection.style.display = 'none';
-        userNameSpan.textContent = `Welcome, ${currentUser.name}`;
-    } else {
-        userSection.style.display = 'none';
-        guestSection.style.display = 'flex';
-    }
-}
+//     if (currentUser) {
+//         userSection.style.display = 'flex';
+//         guestSection.style.display = 'none';
+//         userNameSpan.textContent = `Welcome, ${currentUser.name}`;
+//     } else {
+//         userSection.style.display = 'none';
+//         guestSection.style.display = 'flex';
+//     }
+// }
 
-// Update auth UI when the component loads
-document.addEventListener('DOMContentLoaded', updateAuthUI);
+// // Update auth UI when the component loads
+// document.addEventListener('DOMContentLoaded', updateAuthUI);
 
 // Add some styles for the auth buttons
 const style = document.createElement('style');

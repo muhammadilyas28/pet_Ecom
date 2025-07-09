@@ -75,9 +75,9 @@ class ProductModal {
     showToast(message, type = 'success') {
         const toastContainer = document.querySelector('.toast-container');
         const toast = document.createElement('div');
-        toast.className = 'toast';
+        toast.className = `toast ${type}`;
         toast.innerHTML = `
-            <i class="fas fa-check-circle"></i>
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
             <span>${message}</span>
         `;
 
@@ -93,63 +93,57 @@ class ProductModal {
     }
 
     handlePurchase() {
-        if (this.currentProduct) {
-            const userId = sessionStorage.getItem('userId');
-            if (!userId) {
-                this.showToast('Please log in to add items to cart', 'error');
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 1500);
-                return;
-            }
+        if (!this.currentProduct) {
+            this.showToast('Error: Product not found', 'error');
+            return;
+        }
 
-            // Add to cart animation
-            const addToCartBtn = this.modal.querySelector('.add-to-cart');
-            addToCartBtn.disabled = true;
-            addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+        // Add to cart animation
+        const addToCartBtn = this.modal.querySelector('.add-to-cart');
+        addToCartBtn.disabled = true;
+        addToCartBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
 
-            // Add to cart API call
-            fetch('http://localhost:3000/api/cart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'user-id': userId
-                },
-                body: JSON.stringify({
-                    listingId: this.currentProduct.id.replace('listing-', '')
-                })
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to add to cart');
-                    }
-                    return response.json();
-                })
-                .then(() => {
-                    // Show success message
-                    this.showToast('Added to cart successfully!');
+        try {
+            // Simulate API call (since we don't have a real backend)
+            setTimeout(() => {
+                // Get current cart from localStorage
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-                    // Update cart count in header if it exists
-                    const cartCount = document.querySelector('.cart-count');
-                    if (cartCount) {
-                        const currentCount = parseInt(cartCount.textContent) || 0;
-                        cartCount.textContent = currentCount + 1;
-                    }
-
-                    // Close modal after a short delay
-                    setTimeout(() => {
-                        this.closeModal();
-                    }, 1000);
-                })
-                .catch(error => {
-                    console.error('Add to cart error:', error);
-                    this.showToast('Failed to add to cart. Please try again.', 'error');
-                })
-                .finally(() => {
-                    // Reset button state
-                    addToCartBtn.disabled = false;
-                    addToCartBtn.innerHTML = 'Add to Cart';
+                // Add item to cart
+                cart.push({
+                    id: this.currentProduct.id,
+                    name: this.currentProduct.name,
+                    price: this.currentProduct.price,
+                    image: this.currentProduct.image
                 });
+
+                // Save cart back to localStorage
+                localStorage.setItem('cart', JSON.stringify(cart));
+
+                // Show success message
+                this.showToast('Added to cart successfully!');
+
+                // Update cart count in header if it exists
+                const cartCount = document.querySelector('.cart-count');
+                if (cartCount) {
+                    const currentCount = parseInt(cartCount.textContent) || 0;
+                    cartCount.textContent = currentCount + 1;
+                }
+
+                // Close modal after a short delay
+                setTimeout(() => {
+                    this.closeModal();
+                }, 1000);
+            }, 500);
+        } catch (error) {
+            console.error('Add to cart error:', error);
+            this.showToast('Failed to add to cart. Please try again.', 'error');
+        } finally {
+            // Reset button state after a delay
+            setTimeout(() => {
+                addToCartBtn.disabled = false;
+                addToCartBtn.innerHTML = 'Add to Cart';
+            }, 500);
         }
     }
 

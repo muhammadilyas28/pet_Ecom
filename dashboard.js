@@ -95,34 +95,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize dashboard sections
     const sections = {
         overview: document.querySelector('.dashboard-main'),
-        listings: document.createElement('div')
+        listings: document.getElementById('myListingsGrid')
     };
 
-    // Create My Listings section
-    sections.listings.className = 'dashboard-main my-listings';
-    sections.listings.innerHTML = `
-        <h1>My Listings</h1>
-        <div class="listings-controls">
-            <button class="add-listing-btn" onclick="window.location.href='sell.html'">
-                <i class="fas fa-plus"></i> Add New Listing
-            </button>
-        </div>
-        <div class="listings-grid" id="myListingsGrid">
-            <div class="loading">
-                <i class="fas fa-spinner fa-spin"></i>
-                <p>Loading your listings...</p>
-            </div>
-        </div>
-    `;
-    sections.listings.style.display = 'none';
-    document.querySelector('.dashboard-container').appendChild(sections.listings);
-
-    // Add click handlers for sidebar navigation
-    const menuItems = document.querySelectorAll('.dashboard-sidebar li');
-    menuItems.forEach(item => {
-        item.addEventListener('click', () => {
+    // Add click handlers for sidebar menu
+    document.querySelectorAll('.dashboard-sidebar li').forEach(item => {
+        item.addEventListener('click', async () => {
             // Remove active class from all items
-            menuItems.forEach(i => i.classList.remove('active'));
+            document.querySelectorAll('.dashboard-sidebar li').forEach(i => i.classList.remove('active'));
             // Add active class to clicked item
             item.classList.add('active');
 
@@ -130,17 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (item.textContent.includes('My Listings')) {
                 sections.overview.style.display = 'none';
                 sections.listings.style.display = 'block';
-                fetchUserListings(userId);
+                await fetchUserListings(userId);
             } else if (item.textContent.includes('Overview')) {
                 sections.overview.style.display = 'block';
                 sections.listings.style.display = 'none';
-                fetchDashboardStats(userId);
+                await loadDashboardStats(userId);
             }
         });
     });
 
     // Initialize dashboard stats
-    fetchDashboardStats(userId);
+    loadDashboardStats(userId);
 });
 
 async function fetchDashboardStats(userId) {
@@ -251,11 +231,13 @@ function showErrorState() {
 }
 
 async function fetchUserListings(userId) {
+    if (!userId) return;
+    
     const grid = document.getElementById('myListingsGrid');
     grid.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Loading your listings...</p></div>';
 
     try {
-        const response = await fetch(`http://localhost:3000/api/listings/user`, {
+        const response = await fetch('http://localhost:3000/api/listings/user', {
             headers: {
                 'user-id': userId
             }
@@ -266,110 +248,162 @@ async function fetchUserListings(userId) {
         }
 
         const listings = await response.json();
-        displayUserListings(listings);
+        displayListings(listings);
+        updateDashboardStats(listings);
+
     } catch (error) {
         console.error('Error fetching listings:', error);
-        grid.innerHTML = `
-            <div class="error-message">
-                <i class="fas fa-exclamation-circle"></i>
-                <p>Failed to load listings. Please try again later.</p>
-            </div>
-        `;
+        grid.innerHTML = '<div class="error">Error loading listings. Please try again later.</div>';
     }
 }
 
-function displayUserListings(listings) {
+function displayListings(listings) {
     const grid = document.getElementById('myListingsGrid');
-
+    
     if (!listings || listings.length === 0) {
-        grid.innerHTML = `
-            <div class="no-listings">
-                <i class="fas fa-box-open"></i>
-                <p>You haven't listed any pets yet.</p>
-                <a href="sell.html" class="add-listing-btn">
-                    <i class="fas fa-plus"></i> Add Your First Listing
-                </a>
-            </div>
-        `;
+        grid.innerHTML = '<div class="no-listings">No listings found. Start selling by adding your first pet!</div>';
         return;
     }
 
-    grid.innerHTML = listings.map(listing => `
-        <div class="listing-card" id="listing-${listing.id}">
-            <div class="listing-image">
-                <img src="http://localhost:3000${listing.photos[0]}" 
-                     alt="${listing.breed}"
-                     onerror="this.src='images/placeholder.png'">
-                <span class="status-badge ${listing.status.toLowerCase()}">${listing.status}</span>
-            </div>
+    grid.innerHTML = '';
+    listings.forEach(listing => {
+        const card = document.createElement('div');
+        card.className = 'listing-card';
+        card.innerHTML = `
+            <img src="${listing.photos ? listing.photos[0] : 'default-pet.jpg'}" alt="${listing.pet_type}">
             <div class="listing-info">
-                <h3>${listing.breed}</h3>
-                <p class="pet-type">${listing.pet_type} • ${listing.pet_gender}</p>
-                <p class="age">Age: ${listing.age}</p>
-                <p class="price">₹${parseFloat(listing.price).toLocaleString('en-IN')}</p>
-                <div class="listing-actions">
-                    <button onclick="editListing(${listing.id})" class="edit-btn">
-                        <i class="fas fa-edit"></i> Edit
-                    </button>
-                    <button onclick="deleteListing(${listing.id})" class="delete-btn">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
+                <h3>${listing.pet_type} - ${listing.breed}</h3>
+                <p class="price">₹${parseFloat(listing.price).toFixed(2)}</p>
+                <p class="status ${listing.status}">${listing.status}</p>
+                <div class="actions">
+                    <button onclick="editListing(${listing.id})" class="edit-btn">Edit</button>
+                    <button onclick="deleteListing(${listing.id})" class="delete-btn">Delete</button>
                 </div>
             </div>
-        </div>
-    `).join('');
+        `;
+        grid.appendChild(card);
+    });
 }
 
-function updateDashboardStats() {
-    const stats = JSON.parse(localStorage.getItem('dashboardStats')) || {
-        totalSales: 0,
-        activeListings: 0,
-        totalEarnings: 0
-    };
+// Function to load dashboard statistics
+async function loadDashboardStats(userId) {
+    if (!userId) return;
 
-    document.getElementById('activeListings').textContent = stats.activeListings;
-    document.getElementById('totalSales').textContent = stats.totalSales;
-    document.getElementById('totalEarnings').textContent =
-        `₹${stats.totalEarnings.toLocaleString('en-IN')}`;
-}
-
-async function editListing(listingId) {
-    // Redirect to edit page with listing ID
-    window.location.href = `sell.html?edit=${listingId}`;
-}
-
-async function deleteListing(listingId) {
-    if (!confirm('Are you sure you want to delete this listing?')) {
-        return;
-    }
-
-    const userId = sessionStorage.getItem('userId');
     try {
-        const response = await fetch(`http://localhost:3000/api/listings/${listingId}`, {
-            method: 'DELETE',
+        const response = await fetch('http://localhost:3000/api/listings/user', {
             headers: {
                 'user-id': userId
             }
         });
 
         if (!response.ok) {
-            throw new Error('Failed to delete listing');
+            throw new Error('Failed to fetch listings');
         }
 
-        // Remove the listing card with animation
-        const card = document.getElementById(`listing-${listingId}`);
-        card.style.animation = 'fadeOut 0.3s ease-out forwards';
-        setTimeout(() => {
-            card.remove();
-            // Check if there are no more listings
-            if (document.querySelectorAll('.listing-card').length === 0) {
-                fetchUserListings(userId); // This will show the empty state
-            }
-        }, 300);
+        const listings = await response.json();
+        updateDashboardStats(listings);
+        initializeMonthlyChart(listings);
 
     } catch (error) {
-        console.error('Error deleting listing:', error);
-        alert('Failed to delete listing. Please try again.');
+        console.error('Error loading dashboard stats:', error);
+        document.querySelector('.dashboard-main').innerHTML = '<div class="error">Error loading dashboard stats. Please try again later.</div>';
+    }
+}
+
+// Function to update dashboard statistics
+function updateDashboardStats(listings) {
+    if (!listings) return;
+
+    const activeListings = listings.filter(l => l.status === 'active').length;
+    const soldListings = listings.filter(l => l.status === 'sold');
+    const totalEarnings = soldListings.reduce((sum, l) => sum + parseFloat(l.price), 0);
+
+    document.getElementById('activeListings').textContent = activeListings;
+    document.getElementById('totalSales').textContent = soldListings.length;
+    document.getElementById('totalEarnings').textContent = `₹${totalEarnings.toFixed(2)}`;
+}
+
+// Function to initialize monthly activity chart
+function initializeMonthlyChart(listings) {
+    if (!listings) return;
+
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
+    
+    // Group listings by month
+    const monthlyData = new Array(12).fill(0);
+    listings.forEach(listing => {
+        const month = new Date(listing.created_at).getMonth();
+        monthlyData[month]++;
+    });
+
+    // Destroy existing chart if it exists
+    if (window.activityChart) {
+        window.activityChart.destroy();
+    }
+    
+    window.activityChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Listings',
+                data: monthlyData,
+                borderColor: '#4CAF50',
+                backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                tension: 0.4,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Function to edit a listing
+function editListing(listingId) {
+    window.location.href = `sell.html?edit=${listingId}`;
+}
+
+// Function to delete a listing
+async function deleteListing(listingId) {
+    const userId = localStorage.getItem('userId');
+    if (!userId || !listingId) return;
+
+    if (confirm('Are you sure you want to delete this listing?')) {
+        try {
+            const response = await fetch(`http://localhost:3000/api/listings/${listingId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'user-id': userId
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete listing');
+            }
+
+            // Refresh the listings
+            await fetchUserListings(userId);
+            
+        } catch (error) {
+            console.error('Error deleting listing:', error);
+            alert('Error deleting listing. Please try again.');
+        }
     }
 }
 

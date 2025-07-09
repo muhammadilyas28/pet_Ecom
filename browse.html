@@ -538,13 +538,6 @@
             });
         }
 
-        // Load header and initialize images when the document is ready
-        document.addEventListener('DOMContentLoaded', () => {
-            loadHeader();
-            initializeImages();
-            initializeProductButtons();
-        });
-
         function initializeProductButtons() {
             // Get all view details buttons
             const viewButtons = document.querySelectorAll('.btn');
@@ -553,14 +546,23 @@
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
                     const card = button.closest('.card');
+
+                    // Get the image source, handling potential errors
+                    const imgElement = card.querySelector('img');
+                    const imageSrc = imgElement.src;
+
+                    // Extract the price text without the "Price: " prefix
+                    const priceText = card.querySelector('.price').textContent;
+                    const price = priceText.replace('Price: ', '');
+
                     const productData = {
-                        id: card.id, // Add the card ID
+                        id: card.id || `listing-${Date.now()}`, // Fallback ID if none exists
                         name: card.querySelector('h3').textContent,
-                        image: card.querySelector('img').src,
+                        image: imageSrc,
                         age: card.querySelector('p:nth-of-type(1)').textContent,
                         gender: card.querySelector('p:nth-of-type(2)').textContent,
                         description: card.querySelector('p:nth-of-type(3)').textContent,
-                        price: card.querySelector('.price').textContent,
+                        price: price,
                         features: [
                             'Health checked and vaccinated',
                             'Comes with initial food supply',
@@ -570,10 +572,21 @@
                     };
 
                     // Show modal with product data
-                    window.productModal.showModal(productData);
+                    if (window.productModal) {
+                        window.productModal.showModal(productData);
+                    } else {
+                        console.error('Product modal not initialized');
+                    }
                 });
             });
         }
+
+        // Load header and initialize images when the document is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHeader();
+            initializeImages();
+            initializeProductButtons();
+        });
     </script>
     <script src="./components/header.js"></script>
     <script src="./components/productModal.js"></script>

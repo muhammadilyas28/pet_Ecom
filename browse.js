@@ -75,11 +75,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         errorMessage.style.display = 'block';
 
         // If not logged in, redirect to login page
-        if (error.message === 'Please login to view listings') {
-            setTimeout(() => {
-                window.location.href = 'login.html';
-            }, 1500);
-        }
+        // if (error.message === 'Please login to view listings') {
+        //     setTimeout(() => {
+        //         window.location.href = 'login.html';
+        //     }, 1500);
+        // }
     } finally {
         loadingIndicator.style.display = 'none';
     }
@@ -181,4 +181,259 @@ function initializeCategories() {
             }
         });
     });
-} 
+}
+
+// Function to initialize product buttons and handle product ownership
+function initializeProductButtons() {
+    // Get all view details buttons
+    const viewButtons = document.querySelectorAll('.btn');
+    const currentUserId = localStorage.getItem('userId');
+
+    viewButtons.forEach(button => {
+        button.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const card = button.closest('.card');
+
+            try {
+                // Fetch product details from API
+                const response = await fetch(`http://localhost:3000/api/listings/${card.id}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch product details');
+                }
+                const productDetails = await response.json();
+
+                // Check if the current user is the owner of the product
+                const isOwnProduct = currentUserId && productDetails.user_id === currentUserId;
+
+                const productData = {
+                    id: card.id,
+                    name: card.querySelector('h3').textContent,
+                    image: card.querySelector('img').src,
+                    age: card.querySelector('p:nth-of-type(1)').textContent,
+                    gender: card.querySelector('p:nth-of-type(2)').textContent,
+                    description: card.querySelector('p:nth-of-type(3)').textContent,
+                    price: card.querySelector('.price').textContent,
+                    isOwnProduct: isOwnProduct,
+                    features: [
+                        'Health checked and vaccinated',
+                        'Comes with initial food supply',
+                        'Free first vet consultation',
+                        'Training guidelines included'
+                    ]
+                };
+
+                // Show modal with product data
+                showProductModal(productData);
+
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+                showToast('Error loading product details', 'error');
+            }
+        });
+    });
+}
+
+// Function to show product modal
+function showProductModal(productData) {
+    const modalHtml = `
+        <div class="product-modal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="product-details">
+                    <div class="product-image">
+                        <img src="${productData.image}" alt="${productData.name}">
+                    </div>
+                    <div class="product-info">
+                        <h2>${productData.name}</h2>
+                        ${productData.age}
+                        ${productData.gender}
+                        <p class="description">${productData.description}</p>
+                        <div class="price-section">
+                            <p class="price">${productData.price}</p>
+                            ${productData.isOwnProduct ?
+            `<div class="own-product-notice">
+                                    <i class="fas fa-info-circle"></i>
+                                    This is your listing. You cannot purchase your own pet.
+                                </div>` :
+            `<button class="add-to-cart-button" onclick="handlePurchase('${productData.id}')">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>`
+        }
+                        </div>
+                        <div class="features">
+                            <h3>Features:</h3>
+                            <ul>
+                                ${productData.features.map(feature => `<li><i class="fas fa-check"></i> ${feature}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Add modal to the page
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+    // Add styles for the modal and buttons
+    const style = document.createElement('style');
+    style.textContent = `
+        .add-to-cart-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .add-to-cart-button i {
+            font-size: 18px;
+        }
+
+        ${style.textContent}
+    `;
+    document.head.appendChild(style);
+
+    // Handle modal close
+    const modal = document.querySelector('.product-modal');
+    const closeBtn = document.querySelector('.close-modal');
+
+    closeBtn.onclick = () => {
+        modal.remove();
+    };
+
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.remove();
+        }
+    };
+}
+
+// Function to handle purchase
+async function handlePurchase(productId) {
+    const userId = localStorage.getItem('userId');
+    // if (!userId) {
+    //     showToast('Please log in to make a purchase', 'error');
+    //     window.location.href = 'login.html';
+    //     return;
+    // }
+
+    try {
+        // Add to cart instead of direct purchase
+        const response = await fetch('http://localhost:3000/api/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'user-id': userId
+            },
+            body: JSON.stringify({
+                productId: productId
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to add item to cart');
+        }
+
+        // Show success message
+        showToast('Added to cart successfully!', 'success');
+
+        // Update cart count in header if it exists
+        const cartCount = document.querySelector('.cart-count');
+        if (cartCount) {
+            const currentCount = parseInt(cartCount.textContent || '0');
+            cartCount.textContent = currentCount + 1;
+            cartCount.style.display = 'block';
+        }
+
+        // Close the modal if it exists
+        const modal = document.querySelector('.product-modal');
+        if (modal) {
+            modal.remove();
+        }
+
+    } catch (error) {
+        console.error('Add to cart error:', error);
+        showToast('Error adding item to cart', 'error');
+    }
+}
+
+// Function to show toast messages
+function showToast(message, type) {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+
+    // Add styles for the toast
+    const style = document.createElement('style');
+    style.textContent = `
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 4px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .toast.success {
+            background-color: #4CAF50;
+        }
+        
+        .toast.error {
+            background-color: #f44336;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    document.body.appendChild(toast);
+
+    // Remove the toast after 3 seconds
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+
+// Initialize when document is ready
+document.addEventListener('DOMContentLoaded', () => {
+    initializeProductButtons();
+}); 

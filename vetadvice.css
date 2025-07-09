@@ -231,16 +231,16 @@ h1 {
   top: 25px;
 }
 
-.auth-btn {
+/* .auth-btn {
   padding: 8px 15px;
   margin-left: 10px;
   border-radius: 5px;
   text-decoration: none;
   font-weight: bold;
   transition: all 0.3s;
-}
+} */
 
-.login-btn {
+/* .login-btn {
   background-color: transparent;
   color: #333;
   border: 2px solid #333;
@@ -250,12 +250,12 @@ h1 {
   background-color: #62b5e5;
   color: white;
   border: none;
-}
+} */
 
-.auth-btn:hover {
+/* .auth-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-}
+} */
 
 /* Footer */
 footer {

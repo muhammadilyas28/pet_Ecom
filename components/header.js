@@ -38,6 +38,7 @@ async function loadHeader() {
                                 <li><a href="contact.html">Contact</a></li>
                                 <li><a href="pettales.html">Pet tales</a></li>
                                 <li><a href="vetadvice.html">Vet Advice</a></li>
+                                <li style="background-color: #4CAF50; color: rgb(255, 255, 255) ; border-radius: 4px; "><a href="dashboard.html" id="nav-dashboard">Dashboard</a></li>
                             </ul>
                         </nav>
                         <div class="auth-buttons">

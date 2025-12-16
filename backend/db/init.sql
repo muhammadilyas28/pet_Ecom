@@ -48,11 +48,15 @@ CREATE TABLE IF NOT EXISTS user_stats (
 CREATE TABLE IF NOT EXISTS purchase_history (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    seller_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
     listing_id INTEGER REFERENCES pet_listings(id) ON DELETE SET NULL,
     price DECIMAL(10,2) NOT NULL,
     purchase_date TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(20) DEFAULT 'completed'
 );
+
+-- Add index for better performance on seller_id queries
+CREATE INDEX IF NOT EXISTS idx_purchase_history_seller_id ON purchase_history(seller_id);
 
 -- Add some sample data for testing
 INSERT INTO users (name, email, password) 

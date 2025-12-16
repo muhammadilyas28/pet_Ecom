@@ -36,7 +36,7 @@ router.post('/cart', requireAuth, async (req, res) => {
 
         if (existingCart.rows.length > 0) {
             return res.status(400).json({
-                message: 'Item already in cart'
+                message: 'Add to cart successfully'
             });
         }
 
